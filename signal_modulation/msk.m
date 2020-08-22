@@ -1,12 +1,12 @@
-% MSK，无成型滤波
-function y=msk(N_code,fs,fd,fc)
+function [m,y]=msk(N_code,fc,fs,rs)
 M=2;
-N_samples=fs/fd;    
-xsym = randi([0 M-1],N_code,1); %消息信号
-syms = mskmod(xsym,N_samples,[],0);%MSK基带复包络
+N_samples=fs/rs;    
+m = randi([0 M-1],N_code,1); %消息信号
+syms = mskmod(m,N_samples,'diff',0);%MSK基带复包络
 pfo = comm.PhaseFrequencyOffset('SampleRate', fs,'FrequencyOffset',fc);%加载波
 ytemp = pfo(syms);
 y = real(ytemp.');
+
 
 %%
 %%

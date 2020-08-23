@@ -5,14 +5,14 @@ addpath signal_modulation
 fc = 70;              %载波频率
 fs = 400;             %采样频率 
 rs = 2;               %符号速率
-N_code = 10000;          %符号数量
+N_code = 200;         %符号数量
 N_filter = 150;       %滤波器阶数
 %%%%%%%%%%%%%%%%%%%%%%%%%%%调制信号并进行带限滤波%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 [m,y] = qam16(N_code,fc,fs,rs);   %修改调制方式对应的函数，输出基带码元和对应的调制波形
 
-[h_ask,y_f] = fir_filter(fs,N_filter,fc-3*rs,fc+3*rs,y);   %设计滤波器并进行滤波
+[h_ask,y_f] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,y);   %设计滤波器并进行滤波
 
-beta = sig_e(y_f)/sig_e(y)
+beta = sig_e(y_f)/sig_e(y);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%输出各种图%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % figure()
@@ -30,4 +30,4 @@ beta = sig_e(y_f)/sig_e(y)
 % xlabel('时间/ms')
 % ylabel('幅值')
 % subplot(3,1,3)
-%spec(y,fs,rs,N_code);   %频谱
+% spec(y,fs,rs,N_code);   %频谱

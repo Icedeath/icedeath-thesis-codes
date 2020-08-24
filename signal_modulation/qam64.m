@@ -1,6 +1,8 @@
 function [m,y]=qam64(N_code,fc,fs,rs)
 M=64;
 m = randi([0 M-1],N_code,1); %消息信号
+% m=[0:63]';
+% N_code = 64;
 N_s=fs/rs;
 syms = qammod(m,M,'UnitAveragePower',true); %基带QAM调制,'PlotConstellation',true
 gt=ones(1,N_s);
@@ -13,5 +15,5 @@ y = real(ytemp.');
 % scatterplot(syms)
 % xlabel('同相分量');
 % ylabel('正交分量');
-% title('64QAM信号星座图')
+% title('\fontname{Times New Roman}64QAM\fontname{宋体}信号星座图')
 % grid on

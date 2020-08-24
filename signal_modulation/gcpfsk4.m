@@ -1,16 +1,16 @@
 % 高斯滤波的cpfsk4，调制指数≠0.5（等于0.5用GMSK函数）
-function y=gcpfsk4(N_code,fc,fs,fd,freqsep)
+function [m,y]=gcpfsk4(N_code,fc,fs,rs)
 M=4;
-xsym = randi([0 M-1],N_code,1); %消息信号
-N_sample=fs/fd;
+m = randi([0 M-1],N_code,1); %消息信号
+N_sample=fs/rs;
 mod = comm.CPMModulator('ModulationOrder', M, ...
                         'PulseLength', 4, ...
                         'FrequencyPulse', 'Gaussian', ...
                         'BandwidthTimeProduct', 0.35, ...
-                        'ModulationIndex', freqsep/fd, ...
+                        'ModulationIndex', 0.8, ...
                         'SamplesPerSymbol', N_sample);
 meanM = mean(0:M-1);
-syms = mod(2*(xsym-meanM));
+syms = mod(2*(m-meanM));
 pfo = comm.PhaseFrequencyOffset('SampleRate', fs,'FrequencyOffset',fc);%加载波
 ytemp = pfo(syms);
 y = real(ytemp.');

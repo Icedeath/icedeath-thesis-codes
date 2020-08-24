@@ -11,9 +11,9 @@ yf = reshape(tx_qam.',N_code*N_s,1);
 pfo = comm.PhaseFrequencyOffset('SampleRate', fs,'FrequencyOffset',fc);%加载波
 ytemp = pfo(yf); 
 y = real(ytemp.');
-
+% 
 % scatterplot(syms)
 % xlabel('同相分量');
 % ylabel('正交分量');
-% title('16QAM信号星座图')
+% title('\fontname{Times New Roman}16QAM\fontname{宋体}信号星座图')
 % grid on

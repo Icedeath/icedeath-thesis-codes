@@ -5,7 +5,8 @@ function spec(y,fs,rs,N_code)
     y_f=fft(y)*2/n;
     yshift = fftshift(y_f);
     plot(fshift,abs(yshift));
-    xlabel('频率/MHz')
-    ylabel('幅度')
+    set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
+    xlabel('\fontname{宋体}频率/\fontname{Times New Roman}MHz')
+    ylabel('\fontname{宋体}幅度')
     grid on
 end

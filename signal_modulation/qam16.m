@@ -13,7 +13,8 @@ ytemp = pfo(yf);
 y = real(ytemp.');
 % 
 % scatterplot(syms)
-% xlabel('同相分量');
-% ylabel('正交分量');
+% set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
+% xlabel('\fontname{宋体}同相分量');
+% ylabel('\fontname{宋体}正交分量');
 % title('\fontname{Times New Roman}16QAM\fontname{宋体}信号星座图')
 % grid on

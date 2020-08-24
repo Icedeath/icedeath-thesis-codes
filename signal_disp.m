@@ -68,12 +68,12 @@ n = [1:fs/rs*N_code]/fs;
 plot(n,y_f);
 xlim([0,n(1,end)])
 set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
-title('\fontname{宋体}理想16-QAM信号时域波形')
+title('\fontname{宋体}理想\fontname{Times New Roman}16-QAM\fontname{宋体}信号时域波形')
 xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
 ylabel('\fontname{宋体}幅值')
 subplot(2,1,2)
 spec(y_f,fs,rs,N_code); 
-title('\fontname{宋体}理想16-QAM信号频谱')
+title('\fontname{宋体}理想\fontname{Times New Roman}16-QAM\fontname{宋体}信号频谱')
 
 figure()
 subplot(2,1,1)

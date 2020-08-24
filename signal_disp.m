@@ -11,11 +11,11 @@ snr = 0;              %信噪比
 
 %% 功能函数
 %%%%%%%%%%%%%%%%%%%%%%%%%%%调制信号，滤波，加噪声等%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[m,y] = qam64(N_code,fc,fs,rs);   %修改调制方式对应的函数，输出基带码元和对应的调制波形
+[m,y] = qam16(N_code,fc,fs,rs);   %修改调制方式对应的函数，输出基带码元和对应的调制波形
 
-% [h,y_f] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,y);   %设计滤波器并进行滤波
-% 
-% [n_b,y_n] = awgn_bl(fs,N_filter,fc-4*1.2*rs,fc+4*1.2*rs,y_f,snr);  %加噪声
+[h,y_f] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,y);   %设计滤波器并进行滤波
+
+[n_b,y_n] = awgn_bl(fs,N_filter,fc-4*1.2*rs,fc+4*1.2*rs,y_f,snr);  %加噪声
 
 %beta = sig_e(y_f)/sig_e(y) %滤波后保留的能量
 
@@ -62,28 +62,28 @@ snr = 0;              %信噪比
 % ylabel('\fontname{宋体}幅值')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%加噪前，加噪后对比(第2章)%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% figure()
-% subplot(2,1,1)
-% n = [1:fs/rs*N_code]/fs;
-% plot(n,y_f);
-% xlim([0,n(1,end)])
-% set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
-% title('\fontname{宋体}理想16-QAM信号时域波形')
-% xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
-% ylabel('\fontname{宋体}幅值')
-% subplot(2,1,2)
-% spec(y_f,fs,rs,N_code); 
-% title('\fontname{宋体}理想16-QAM信号频谱')
-% 
-% figure()
-% subplot(2,1,1)
-% n = [1:fs/rs*N_code]/fs;
-% plot(n,y_n);
-% xlim([0,n(1,end)])
-% set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
-% title('\fontname{宋体}加噪声后16-QAM信号时域波形')
-% xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
-% ylabel('\fontname{宋体}幅值')
-% subplot(2,1,2)
-% spec(y_n,fs,rs,N_code); 
-% title('\fontname{宋体}加噪声后16-QAM信号频谱')
+figure()
+subplot(2,1,1)
+n = [1:fs/rs*N_code]/fs;
+plot(n,y_f);
+xlim([0,n(1,end)])
+set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
+title('\fontname{宋体}理想16-QAM信号时域波形')
+xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
+ylabel('\fontname{宋体}幅值')
+subplot(2,1,2)
+spec(y_f,fs,rs,N_code); 
+title('\fontname{宋体}理想16-QAM信号频谱')
+
+figure()
+subplot(2,1,1)
+n = [1:fs/rs*N_code]/fs;
+plot(n,y_n);
+xlim([0,n(1,end)])
+set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
+title('\fontname{宋体}加噪声后\fontname{Times New Roman}16-QAM\fontname{宋体}信号时域波形')
+xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
+ylabel('\fontname{宋体}幅值')
+subplot(2,1,2)
+spec(y_n,fs,rs,N_code); 
+title('\fontname{宋体}加噪声后\fontname{Times New Roman}16-QAM\fontname{宋体}信号频谱')

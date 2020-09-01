@@ -10,8 +10,8 @@ pfo = comm.PhaseFrequencyOffset('SampleRate', fs,'FrequencyOffset',fc);%加载波
 ytemp = pfo(yf); 
 y = real(ytemp.');
 
-scatterplot(syms)
-xlabel('同相分量');
-ylabel('正交分量');
-title('256QAM信号星座图')
-grid on
+% scatterplot(syms)
+% xlabel('同相分量');
+% ylabel('正交分量');
+% title('256QAM信号星座图')
+% grid on

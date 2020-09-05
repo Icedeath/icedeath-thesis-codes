@@ -8,6 +8,6 @@ for i = 1:N_code
     xsym(1,(i-1)*N_s+1:(i-1)*N_s+N_s) = m(i);    %生成NRZ码元序列
 end
 
-xsym = (xsym+1)/8;        %对应文中调制参数，0~7对应调制幅度为0.125~1
+xsym = xsym*0.6+0.2;        %对应文中调制参数，0~7对应调制幅度为0.125~1
 
 y = modulate(xsym,fc,fs,'am');  %载波调制

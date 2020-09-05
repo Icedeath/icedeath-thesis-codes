@@ -9,7 +9,6 @@ h = dfilt.dffir(b).Numerator;
 
 y_f = conv(h,y);           %卷积操作滤波
 y_f = y_f(1,N_filter/2:end-N_filter/2-1);    %FIR群延时为N_filter/2
-
 % fvtool(h)
 % xlabel('频率/MHz')
 % ylabel('幅度/dB')

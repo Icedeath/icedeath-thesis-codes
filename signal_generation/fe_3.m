@@ -6,7 +6,7 @@ close all
 fc = 70;              %载波频率
 fs = 400;             %采样频率 
 rs = 2;               %符号速率
-N_code = 5;           %符号数量
+N_code = 2000;           %符号数量
 N_filter = 200;       %滤波器阶数
 Num_classes = 8;      %信号种类数量
 snr_min = -5;         %信噪比范围

@@ -11,11 +11,11 @@ snr = 0;              %信噪比
 
 %% 功能函数
 %%%%%%%%%%%%%%%%%%%%%%%%%%%调制信号，滤波，加噪声等%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-[m,y] = ask2(N_code,fc,fs,rs);   %修改调制方式对应的函数，输出基带码元和对应的调制波形
+[m,y] = psk8(N_code,fc,fs,rs);   %修改调制方式对应的函数，输出基带码元和对应的调制波形
 
-[h,y_f] = fir_filter(fs,N_filter,fc-2*rs,fc+2*rs,y);   %设计滤波器并进行滤波
+[h,y_f] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,y);   %设计滤波器并进行滤波
 
-[n_b,y_n] = awgn_bl(fs,N_filter,fc-2*1.2*rs,fc+2*1.2*rs,y_f,snr);  %加噪声
+%[n_b,y_n] = awgn_bl(fs,N_filter,fc-2*1.2*rs,fc+2*1.2*rs,y_f,snr);  %加噪声
 
 % beta = sig_e(y_f)/sig_e(y) %滤波后保留的能量
 
@@ -89,34 +89,34 @@ snr = 0;              %信噪比
 % title('\fontname{宋体}加噪声后\fontname{Times New Roman}16-QAM\fontname{宋体}信号频谱')
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%瞬时幅度，相位以及频率%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% [a,phi_NL,f]=int_inf(y_f,fc,fs);
-% figure()
-% subplot(4,1,1)
-% n = [1:fs/rs*N_code]/fs;
-% plot(n,y_f);
-% xlim([0,n(1,end)])
-% set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
-% ylabel('\fontname{宋体}时域波形')
-% xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
-% subplot(4,1,2)
-% plot(n,a);
-% xlim([0,n(1,end)])
-% set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
-% ylabel('\fontname{宋体}瞬时幅度')
-% xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
-% grid on
-% subplot(4,1,3)
-% plot(n,phi_NL);
-% ylabel('\fontname{宋体}瞬时相位')
-% xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
-% xlim([0,n(1,end)])
-% grid on
-% subplot(4,1,4)
-% plot(n,f);
-% ylabel('\fontname{宋体}瞬时频率')
-% xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
-% xlim([0,n(1,end)])
-% %ylim([-6,6])
-% grid on
+[a,phi_NL,f]=int_inf(y_f,fc,fs);
+figure()
+subplot(4,1,1)
+n = [1:fs/rs*N_code]/fs;
+plot(n,y_f);
+xlim([0,n(1,end)])
+set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
+ylabel('\fontname{宋体}时域波形')
+xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
+subplot(4,1,2)
+plot(n,a);
+xlim([0,n(1,end)])
+set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
+ylabel('\fontname{宋体}瞬时幅度')
+xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
+grid on
+subplot(4,1,3)
+plot(n,phi_NL);
+ylabel('\fontname{宋体}瞬时相位')
+xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
+xlim([0,n(1,end)])
+grid on
+subplot(4,1,4)
+plot(n,f);
+ylabel('\fontname{宋体}瞬时频率')
+xlabel('\fontname{宋体}时间\fontname{Times New Roman}/ms')
+xlim([0,n(1,end)])
+%ylim([-6,6])
+grid on
 
 % %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%复基带包络%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

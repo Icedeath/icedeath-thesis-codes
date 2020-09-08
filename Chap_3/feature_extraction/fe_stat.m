@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%特征方差统计%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%特征提取%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear all
 clc 
 close all
@@ -117,5 +117,5 @@ for snr = snr_min:snr_max
     end
 end
 
-save data_fe mode1 mode2 mode3 mode4 mode5 mode6 mode7 mode8 snr_min snr_max N_code N_samples
+save ../dataset/data_fe mode1 mode2 mode3 mode4 mode5 mode6 mode7 mode8 snr_min snr_max N_code N_samples
     

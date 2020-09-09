@@ -17,6 +17,7 @@ for i=1:25
 eval(['var(i)=varf(var_f',num2str(i),');'])
 end
 
+var
 function varff = varf(var_f)
 varff = zeros(1,8);
 for i=1:size(var_f,1)

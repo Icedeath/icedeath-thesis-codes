@@ -5,7 +5,7 @@ addpath(genpath('./'))
 fc = 70;              %载波频率
 fs = 400;             %采样频率 
 rs = 2;               %符号速率
-N_code = 10;          %符号数量
+N_code = 20;          %符号数量
 N_filter = 2000;       %滤波器阶数
 snr = 0;              %信噪比
 

@@ -14,7 +14,7 @@ from sklearn.model_selection import GridSearchCV
 import warnings
 warnings.filterwarnings('ignore')
 
-nb_classes=15
+nb_classes=8
 
 def get_cm(y,y_pred,nb_classes):
     cm = np.zeros([nb_classes, nb_classes])
@@ -30,41 +30,59 @@ snr1=0
 
 snr1='%d' %snr1
 
-train_set='fe'+snr1+'.mat'
+train_set='./dataset/data_fe_'+snr1+'.mat'
 
 
+print('Loading data...')
+train_x=sio.loadmat(train_set,appendmat=False)['test_x'][:,[7,8,9,13,20]]
+train_y=np.squeeze(sio.loadmat(train_set,appendmat=False)['test_y'])
+#test_x=sio.loadmat(train_set,appendmat=False)['train_x'][:,[7,8,9,13,20]]
+#test_y=np.squeeze(sio.loadmat(train_set,appendmat=False)['train_y'])
 
-train_set_x=sio.loadmat(train_set,appendmat=False)['feature']
-train_set_y=np.squeeze(sio.loadmat(train_set,appendmat=False)['y'])
+svr = svm.SVC(decision_function_shape='ovo')
 
+tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-2,1e-1,1e-3, 1e-4],
+                     'C': [1, 10, 100, 1000]},
+                    {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+     
+clf = GridSearchCV(svr, tuned_parameters, n_jobs=-1)
+     
+print('Training SVM...')
+clf.fit(train_x, train_y) 
+#clf.best_params_
+'''  
+y_pred=np.int64(clf.predict(test_x))
 
-
-snr = np.arange(-10,21,2)
+cm = get_cm(test_y, y_pred, nb_classes)
+accuracy = get_accuracy(cm)
+accuracy_m=np.mean(accuracy)
+print(accuracy)
+'''
+snr = np.arange(0,21,2)
 ace=[]
 ace_m=[]
 for i in snr:
      print(i)
      a='%d' %i
-     test_set='fe'+a+'.mat'
-     test_set_x=sio.loadmat(test_set,appendmat=False)['feature']
-     test_set_y=np.squeeze(sio.loadmat(test_set,appendmat=False)['y'])
+     test_set='./dataset/data_fe_'+a+'.mat'
+     test_x=sio.loadmat(test_set,appendmat=False)['train_x'][:,[7,8,9,13,20]]
+     test_y=np.squeeze(sio.loadmat(test_set,appendmat=False)['train_y'])
      
      svr = svm.SVC(decision_function_shape='ovo')
      
-     parameters = {'kernel':('linear', 'rbf'), 'C':[1, 10]}
      
-     clf = GridSearchCV(svr, parameters, n_jobs=-1)
+     tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-2,1e-1,1e-3, 1e-4],
+                     'C': [1, 10, 100, 1000]},
+                    {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
      
-     clf.fit(train_set_x, train_set_y) 
      
-     
-     y_pred=np.int64(clf.predict(test_set_x))
+     y_pred=np.int64(clf.predict(test_x))
 
-     cm = get_cm(test_set_y, y_pred, nb_classes)
+     cm = get_cm(test_y, y_pred, nb_classes)
      accuracy = get_accuracy(cm)
      accuracy_m=np.mean(accuracy)
      ace.append(accuracy)
      ace_m.append(accuracy_m)
      
-savedata='acc_lin_'+snr1+'.mat'
+     savedata='acc_lin_'+snr1+'.mat'
 sio.savemat(savedata, {'ace':ace,'ace_m':ace_m})

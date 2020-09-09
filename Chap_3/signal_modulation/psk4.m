@@ -11,4 +11,3 @@ yf = reshape(tx_qam.',N_code*N_s,1);
 pfo = comm.PhaseFrequencyOffset('SampleRate', fs,'FrequencyOffset',fc);%º”‘ÿ≤®
 ytemp = pfo(yf);
 y = real(ytemp.');
-

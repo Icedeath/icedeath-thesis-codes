@@ -86,9 +86,9 @@ if __name__ == "__main__":
     
     K.set_image_data_format('channels_last')
     
-    x_train=sio.loadmat(args.dataset,appendmat=False)['train_x']
+    x_train=sio.loadmat(args.dataset,appendmat=False)['train_x'][:,[8,9,13,20]]
     Y_train=np.squeeze(sio.loadmat(args.dataset,appendmat=False)['train_y'])
-    x_test=sio.loadmat(args.dataset,appendmat=False)['test_x']
+    x_test=sio.loadmat(args.dataset,appendmat=False)['test_x'][:,[8,9,13,20]]
     Y_test=np.squeeze(sio.loadmat(args.dataset,appendmat=False)['test_y'])
     y_train = np_utils.to_categorical(Y_train, 8)
     y_test = np_utils.to_categorical(Y_test, 8)

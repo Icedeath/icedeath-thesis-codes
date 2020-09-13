@@ -11,7 +11,7 @@ rs = 2;               %符号速率
 N_code = 40;           %符号数量
 N_filter = 200;       %滤波器阶数
 length = 4000;  %Final length of signals
-N_samples_m = 600000;    %Number of overlapped samples
+N_samples_m = 1;    %Number of overlapped samples
 num_classes = 8;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp('Feature Exaction started...')
@@ -24,19 +24,18 @@ fc_min = 0.9*fc;
 snr_min = 0;
 snr_max = 20;
 
-max_targets = 2;
-min_targets = 1;
+max_targets = 3;
+min_targets = 3;
 
 max_shift = fs*N_code/rs - length;
 
 fprintf('Generating overlapped samples...\nMax_target = %d\n', max_targets);
 
-%for snr1 = 0:2:20
+
 x_train = zeros(N_samples_m, length);
 y_train = zeros(N_samples_m, num_classes);
 
-%snr_max = snr1;
-%snr_min = snr1;
+
 
 idx_tar = randi([min_targets, max_targets], 1, N_samples_m);
 for i=1:N_samples_m
@@ -44,8 +43,17 @@ for i=1:N_samples_m
         fprintf('Current SNR = %d dB',snr);
         fprintf('   itr=%d\n',i);
     end
-    class_i = randperm(num_classes);
-    class_i = class_i(1:idx_tar(i));
+    idx = [1:8,4,5,6,7];
+    class_id = randperm(num_classes+4);
+    class_i = idx(class_id)
+    if size(unique(class_i(1:idx_tar(i))),2)==idx_tar(i)
+        class_i = unique(class_i(1:idx_tar(i)))
+    elseif size(unique(class_i(1:idx_tar(i)+1)),2)==idx_tar(i)
+        class_i = unique(class_i(1:idx_tar(i)+1))
+    elseif size(unique(class_i(1:idx_tar(i)+2)),2)==idx_tar(i)
+        class_i = unique(class_i(1:idx_tar(i)+2))
+    end
+
     fcc = unifrnd (fc_min, fc_max,size(class_i,2),1);
     Acc = unifrnd (Ac_min, Ac_max,size(class_i,2),1);
     shift = randi (max_shift-1,size(class_i,2),1);
@@ -114,15 +122,3 @@ fprintf('Saving...\n');
 x_train = x_train';
 y_train = y_train';
 save('../samples/tr_2','x_train','y_train','Ac', 'fc','snr','length','-v7.3')
-%end
-
-% subplot(5,1,1)
-% plot(y(1,:))
-% subplot(5,1,2)
-% plot(y(2,:))
-% subplot(5,1,3)
-% plot(y(3,:))
-% subplot(5,1,4)
-% plot(y_r)
-% subplot(5,1,5)
-% plot(x_train)

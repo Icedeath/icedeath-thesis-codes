@@ -11,7 +11,7 @@ rs = 2;               %·ûºÅËÙÂÊ
 N_code = 100;           %·ûºÅÊýÁ¿
 N_filter = 200;       %ÂË²¨Æ÷½×Êý
 length = 8000;  %Final length of signals
-N_samples_m = 2;    %Number of overlapped samples
+N_samples_m = 10;    %Number of overlapped samples
 num_classes = 8;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp('Feature Exaction started...')
@@ -32,8 +32,8 @@ max_shift = fs*N_code/rs - length;
 fprintf('Generating overlapped samples...\nMax_target = %d\n', max_targets);
 
 
-x_train = zeros(N_samples_m, length);
-y_train = zeros(N_samples_m, num_classes);
+x_train = zeros(length,N_samples_m);
+y_train = zeros(num_classes,N_samples_m);
 
 
 
@@ -64,54 +64,54 @@ for i=1:N_samples_m
                 [~,yr] = ask2(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-2*rs,fcc(j)+2*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(i, class_i(j))=1;
+                y_train(class_i(j),i)=1;
             case 2
                 [~,yr] = fsk2(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(i, class_i(j))=1;
+                y_train(class_i(j),i)=1;
             case 3
                 [~,yr] = fsk4(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(i, class_i(j))=1;
+                y_train(class_i(j),i)=1;
             case 4
                 [~,yr] = psk2(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(i, class_i(j))=1;
+                y_train(class_i(j),i)=1;
             case 5
                 [~,yr] = psk4(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(i, class_i(j))=1;
+                y_train(class_i(j),i)=1;
             case 6
                 [~,yr] = qam16(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(i, class_i(j))=1;
+                y_train(class_i(j),i)=1;
             case 7
                 [~,yr] = qam64(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(i, class_i(j))=1;
+                y_train(class_i(j),i)=1;
             case 8
                 [~,yr] = msk(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-2.25*rs,fcc(j)+2.25*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(i, class_i(j))=1;
+                y_train(class_i(j),i)=1;
         end
     end
     y_r = sum(y, 1)/sqrt(sig_e(sum(y, 1)));
     snr = randi([snr_min, snr_max],1);
     if isequal(y_train(i),[1 0 0 0 0 0 0 1])==1
-        x_train(i,:) = awgn_bl(fs,N_filter,min(fcc)-2.25*1.2*rs,max(fcc)+2.25*1.2*rs,y_r,snr);
+        x_train(:,i) = awgn_bl(fs,N_filter,min(fcc)-2.25*1.2*rs,max(fcc)+2.25*1.2*rs,y_r,snr)';
     elseif isequal(y_train(i),[1 0 0 0 0 0 0 0])==1
-        x_train(i,:) = awgn_bl(fs,N_filter,min(fcc)-2*1.2*rs,max(fcc)+2*1.2*rs,y_r,snr);
+        x_train(:,i) = awgn_bl(fs,N_filter,min(fcc)-2*1.2*rs,max(fcc)+2*1.2*rs,y_r,snr)';
     elseif isequal(y_train(i),[0 0 0 0 0 0 0 1])==1  
-        x_train(i,:) = awgn_bl(fs,N_filter,min(fcc)-2.25*1.2*rs,max(fcc)+2.25*1.2*rs,y_r,snr);
+        x_train(:,i) = awgn_bl(fs,N_filter,min(fcc)-2.25*1.2*rs,max(fcc)+2.25*1.2*rs,y_r,snr)';
     else
-        x_train(i,:) = awgn_bl(fs,N_filter,min(fcc)-4*1.2*rs,max(fcc)+4*1.2*rs,y_r,snr);
+        x_train(:,i) = awgn_bl(fs,N_filter,min(fcc)-4*1.2*rs,max(fcc)+4*1.2*rs,y_r,snr)';
     end
 end
 
@@ -119,6 +119,4 @@ Ac = [Ac_min, Ac_max];
 snr = [snr_min, snr_max];
 fc = [fc_min, fc_max];
 fprintf('Saving...\n');
-x_train = x_train';
-y_train = y_train';
 save('../samples/tr_3','x_train','y_train','Ac', 'fc','snr','length','-v7.3')

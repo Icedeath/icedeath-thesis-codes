@@ -24,7 +24,7 @@ hold on
 grid on
 label = 1;
 x=plot_pdf(label,y_train,y_pred1,'b^');
-xlim([0.4,0.8])
+xlim([0.2,0.5])
 ylim([0,0.0015])
 
 
@@ -38,5 +38,10 @@ function x=plot_pdf(label, y_train, y_pred, str)
     y1 = reshape(y1, 1, n);
     [y,x] = hist(y1, 99);
     y = y/size(y_train,1)/10;
+    if label==1
+        y=y/1.5;
+    elseif label==0
+        y=y/6.5;
+    end
     stem(x,y,str)
 end

@@ -16,8 +16,8 @@ import h5py
 from keras.layers.advanced_activations import ELU
 
 import os
-#os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-#os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
 #os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 K.set_image_data_format('channels_last')
@@ -55,8 +55,14 @@ def CapsNet(input_shape, n_class, routings):
     conv1 = layers.Conv2D(filters=192, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
+    conv1 = layers.Conv2D(filters=192, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
     conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
 
+    conv1 = layers.Conv2D(filters=256, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
     conv1 = layers.Conv2D(filters=256, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
@@ -77,7 +83,7 @@ def CapsNet(input_shape, n_class, routings):
     return model
 
 
-def margin_loss(y_true, y_pred, margin = 0.4, threshold = 0.02):
+def margin_loss(y_true, y_pred, margin = 0.4, threshold = -0.025):
     y_pred = y_pred - 0.5
     t_1 = threshold+0.15
     t_2 = threshold-0.15
@@ -88,8 +94,8 @@ def margin_loss(y_true, y_pred, margin = 0.4, threshold = 0.02):
     positive_threshold_cost = y_true * K.cast(
                     K.less(y_pred, t_1), 'float32') * K.pow((y_pred - t_1), 2)
     negative_threshold_cost = (1 - y_true) * K.cast(
-                    K.greater(y_pred, -t_2), 'float32') * K.pow((y_pred + t_2), 2)
-    return 0.5 * positive_cost + 0.5 * negative_cost + 0.5*positive_threshold_cost + 0.5*negative_threshold_cost
+                    K.greater(y_pred, t_2), 'float32') * K.pow((y_pred - t_2), 2)
+    return 0.5 * positive_cost + 0.5 * negative_cost + positive_threshold_cost + negative_threshold_cost
 
 
 def margin_loss1(y_true, y_pred, margin = 0.4):
@@ -138,23 +144,23 @@ def save_single():
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on Multi-signal AMC.")
-    parser.add_argument('--epochs', default=30, type=int)
-    parser.add_argument('--batch_size', default=64, type=int)
-    parser.add_argument('--lr', default=0.0003, type=float,
+    parser.add_argument('--epochs', default=20, type=int)
+    parser.add_argument('--batch_size', default=128, type=int)
+    parser.add_argument('--lr', default=0.00004, type=float,
                         help="初始学习率")
-    parser.add_argument('--lr_decay', default=0.99, type=float,
+    parser.add_argument('--lr_decay', default=0.95, type=float,
                         help="学习率衰减")
     parser.add_argument('-r', '--routings', default=3, type=int,
                         help="routing迭代次数")
-    parser.add_argument('-sf', '--save_file', default='./weights/7000_2_ub_lts.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/8000_2_11090_lt.h5',
                         help="权重文件名称")
-    parser.add_argument('-t', '--test', default=1,type=int,
+    parser.add_argument('-t', '--test', default=0,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
     parser.add_argument('-p', '--plot', default=0,type=int,
                         help="训练结束后画出loss变化曲线，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/te_2_7000.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/8000_2_11090.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=8,
                         help="类别数")
@@ -212,7 +218,7 @@ if __name__ == "__main__":
     print('-'*30 + 'Begin: test' + '-'*30)
     
     y_pred1 = model.predict(x_train, batch_size=args.batch_size,verbose=1)
-    sio.savemat('final_output_LT.mat', {'y_pred1':y_pred1, 'y_train':y_train})
+    sio.savemat('final_output_LT_3.mat', {'y_pred1':y_pred1, 'y_train':y_train})
     y_pred = (np.sign(y_pred1-0.52)+1)/2
     idx_yt = np.sum(y_train, axis = 1)
     idx_yp = np.sum(y_pred, axis = 1)

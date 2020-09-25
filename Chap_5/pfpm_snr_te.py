@@ -26,7 +26,7 @@ pff=[]
 pmm=[]
 accc=[]
 for te in snr:
-    data = sio.loadmat('final_output_LT.mat', appendmat=False)
+    data = sio.loadmat('final_output_2_noLT.mat', appendmat=False)
     for i in data:
         locals()[i] = data[i]
     del data
@@ -73,4 +73,4 @@ for te in snr:
     pff.append(pf)
     pmm.append(pm)
 
-sio.savemat('pfpm_snr_lt.mat', {'acc':accc,'pf':pff,'pm':pmm})
+sio.savemat('pfpm_snr_2_noLt.mat', {'acc':accc,'pf':pff,'pm':pmm})

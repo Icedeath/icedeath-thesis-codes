@@ -1,8 +1,8 @@
-load pfpm_snr
+load pfpm_snr_2_noLt
 pf1 = pf;
 pm1 = pm;
 acc1 = acc;
-load pfpm_snr_lt
+%load pfpm_snr_lt
 n = (0.15:0.01:0.85)';
 
 figure()

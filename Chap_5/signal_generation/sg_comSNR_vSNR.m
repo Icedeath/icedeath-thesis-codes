@@ -21,7 +21,7 @@ Ac_min = 0.9;
 fc_max = 72;
 fc_min = 68;
 
-max_targets = 1;
+max_targets = 2;
 min_targets = 1;
 
 max_shift = fs*N_code/rs - length;
@@ -116,5 +116,5 @@ Ac = [Ac_min, Ac_max];
 snr = [snr_min, snr_max];
 fc = [fc_min, fc_max];
 fprintf('Saving...\n');
-save(strcat('../samples/te_1_3/te_',num2str(snr1)),'x_train','y_train','Ac', 'fc','snr','length','-v7.3')
+save(strcat('../samples/te_1-2/te_',num2str(snr1)),'x_train','y_train','Ac', 'fc','snr','length','-v7.3')
 end

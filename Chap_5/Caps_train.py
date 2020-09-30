@@ -152,7 +152,7 @@ if __name__ == "__main__":
                         help="学习率衰减")
     parser.add_argument('-r', '--routings', default=3, type=int,
                         help="routing迭代次数")
-    parser.add_argument('-sf', '--save_file', default='./weights/8000_3_11090_te1.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/8000_2_11090.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
@@ -160,7 +160,7 @@ if __name__ == "__main__":
                         help="是否载入模型，设为1激活")
     parser.add_argument('-p', '--plot', default=0,type=int,
                         help="训练结束后画出loss变化曲线，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/te_3_all.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/te_2_all.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=8,
                         help="类别数")
@@ -219,7 +219,7 @@ if __name__ == "__main__":
     
     y_pred1 = model.predict(x_train, batch_size=args.batch_size,verbose=1)
     sio.savemat('final_output_LT_3.mat', {'y_pred1':y_pred1, 'y_train':y_train})
-    y_pred = (np.sign(y_pred1-0.475)+1)/2
+    y_pred = (np.sign(y_pred1-0.445)+1)/2
     idx_yt = np.sum(y_train, axis = 1)
     idx_yp = np.sum(y_pred, axis = 1)
     idx_cm = np.zeros([args.num_classes + 1, args.num_classes+1])

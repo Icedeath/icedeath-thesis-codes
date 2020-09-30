@@ -62,9 +62,9 @@ def CapsNet(input_shape, n_class, routings):
     conv1 = layers.Conv2D(filters=192, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
-    #conv1 = layers.Conv2D(filters=192, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
-    #conv1 = ELU(alpha=0.5)(conv1)
-    #conv1 = BN()(conv1)
+    conv1 = layers.Conv2D(filters=192, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
     conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
 
     conv1 = layers.Conv2D(filters=256, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
@@ -73,9 +73,9 @@ def CapsNet(input_shape, n_class, routings):
     conv1 = layers.Conv2D(filters=256, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
-    #conv1 = layers.Conv2D(filters=256, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
-    #conv1 = ELU(alpha=0.5)(conv1)
-    #conv1 = BN()(conv1)
+    conv1 = layers.Conv2D(filters=256, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
     
     primarycaps = PrimaryCap(conv1, dim_capsule=8, n_channels=32, kernel_size=(1,3),
                              strides=1, padding='same')
@@ -132,13 +132,13 @@ def train(model, data, args):
     return hist.history
 
 def get_cm(y_train, y_pred1, args):
-    y_pred = (np.sign(y_pred1-0.52)+1)/2
+    y_pred = (np.sign(y_pred1-0.46)+1)/2
     idx_yt = np.sum(y_train, axis = 1)
     idx_yp = np.sum(y_pred, axis = 1)
     idx_cm = np.zeros([args.num_classes + 1, args.num_classes+1])
     idx = np.arange(0, args.num_classes)
     for i in range(y_pred.shape[0]):
-        if np.mod(i,20000)==0:
+        if np.mod(i,1000)==0:
             print(i)
         y_p = y_pred[i,:]
         y_t = y_train[i,:]
@@ -177,7 +177,7 @@ if __name__ == "__main__":
                         help="学习率衰减")
     parser.add_argument('-r', '--routings', default=3, type=int,
                         help="routing迭代次数")
-    parser.add_argument('-sf', '--save_file', default='./weights/Lt_2.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/8000_2_11090.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
@@ -198,14 +198,14 @@ if __name__ == "__main__":
 
 
     print('-'*30 + 'Begin: test' + '-'*30)
-    snr = np.linspace(-5,15,21, dtype = int)
+    snr = np.linspace(0,20,21, dtype = int)
     
     acc = []
     acc_aver = []
     pf = []
     pm = []
     for s in snr:
-        args.dataset = 'dataset_MAMC' + str(s) + '_8.mat'
+        args.dataset = './samples/te_2/te_' + str(s)+'.mat'
         print('Current SNR = %d dB, loading %s...' %(s, args.dataset))
         with h5py.File(args.dataset, 'r') as data:
             for i in data:
@@ -238,8 +238,8 @@ if __name__ == "__main__":
         pm.append(pm1)
         acc_aver.append(np.mean(acc1))
     print('Saving results...')        
-    file_save = 'acc_'+args.save_file.rstrip('_sGPU.h5').lstrip('./weights')+'.mat'
-    sio.savemat(file_save, {'acc':acc, 'acc_aver':acc_aver, 'pf':pf, 'pm': pm,'idx_cm',idx_cm})
+    file_save = 'acc_'+args.save_file.rstrip('.h5').lstrip('./weights')+'.mat'
+    sio.savemat(file_save, {'acc':acc, 'acc_aver':acc_aver, 'pf':pf, 'pm': pm})
 
     print('-' * 30 + 'End  : test' + '-' * 30)   
 '''

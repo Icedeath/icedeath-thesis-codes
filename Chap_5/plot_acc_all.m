@@ -1,6 +1,7 @@
-load accuracy/accuracy_Lt_4500/hunxiao_Lt_4500
-acc = newAccAll;
-n = -5:15;
+load acc_2_1.mat
+n = 0:20;
+%acc=sort(acc,1)';
+acc=acc'
 figure()
 hold on 
 grid on
@@ -20,7 +21,7 @@ h7=plot(n, acc(7,:), 'rd-');
 set(h7,{'LineWidth'},{0.8});
 h8=plot(n, acc(8,:), 'b>-');
 set(h8,{'LineWidth'},{0.8});
-xlim([-5,15])
+xlim([0,20])
 %ylim([0.85,1])
 xlabel('Composite SNR (dB)')
 ylabel('{P_{cc}}')

@@ -198,7 +198,7 @@ if __name__ == "__main__":
 
 
     print('-'*30 + 'Begin: test' + '-'*30)
-    snr = np.linspace(0,20,21, dtype = int)
+    snr = np.linspace(2,20,10, dtype = int)
     
     acc = []
     acc_aver = []
@@ -238,7 +238,7 @@ if __name__ == "__main__":
         pm.append(pm1)
         acc_aver.append(np.mean(acc1))
     print('Saving results...')        
-    file_save = 'acc_'+args.save_file.rstrip('.h5').lstrip('./weights')+'.mat'
+    file_save = 'acc_2_2.mat'
     sio.savemat(file_save, {'acc':acc, 'acc_aver':acc_aver, 'pf':pf, 'pm': pm})
 
     print('-' * 30 + 'End  : test' + '-' * 30)   

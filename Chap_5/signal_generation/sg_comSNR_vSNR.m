@@ -48,7 +48,10 @@ for i=1:N_samples_m
 
     fcc = unifrnd (fc_min, fc_max,size(class_i,2),1);
     Acc = unifrnd (Ac_min, Ac_max,size(class_i,2),1);
-    shift = randi (max_shift-1,size(class_i,2),1);
+    shift = randi (max_shift-1,size(class_i,2),1);                y_train(class_i(j),i)=1;
+                fcb(j,:) = [fcc(j)-1.2*2.25*rs,fcc(j)+1.2*2.25*rs];
+        end
+    end
     fcb = zeros(idx_tar(i),2);
     y = zeros(idx_tar(i), length);
     for j =1:size(class_i,2)
@@ -99,10 +102,7 @@ for i=1:N_samples_m
                 [~,yr] = msk(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-2.25*rs,fcc(j)+2.25*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(class_i(j),i)=1;
-                fcb(j,:) = [fcc(j)-1.2*2.25*rs,fcc(j)+1.2*2.25*rs];
-        end
-    end
+
     y_r = sum(y, 1)/sqrt(sig_e(sum(y, 1)));
     snr = randi([snr_min, snr_max],1);
     bl1 = min(min(fcb));

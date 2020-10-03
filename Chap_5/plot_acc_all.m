@@ -1,9 +1,9 @@
-load acc_2_1_2.mat
+clear all
+close all
+load acc_3_2.mat
 n = 0:2:20;
-acc=sort(acc,1)';
-pf=fliplr(sort(pf));
-pm=fliplr(sort(pm));
-%acc=acc';
+acc=acc';
+
 figure()
 box on
 hold on 
@@ -40,6 +40,15 @@ ylabel('{P_{cc}}')
 legend('\fontname{Times New Roman}2ASK', '\fontname{Times New Roman}2FSK', '\fontname{Times New Roman}4FSK', ...
     '\fontname{Times New Roman}BPSK', '\fontname{Times New Roman}QPSK', '\fontname{Times New Roman}16QAM',...
     '\fontname{Times New Roman}64QAM', '\fontname{Times New Roman}MSK')
+% acc1=acc;
+% pf1=pf;
+% pm1=pm;
+% acc_aver1=acc_aver;
+% load acc_3_1_3.mat
+% n = 0:2:20;
+% acc=sort(acc,1)';
+% pf=fliplr(sort(pf));
+% pm=fliplr(sort(pm));
 
 
 figure()
@@ -53,14 +62,31 @@ set(h9,{'LineWidth'},{0.8});
 h10=plot(n, pm(1,:), 'm<-');
 set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
 set(h10,{'LineWidth'},{0.8});
-ylim([0,0.3])
+% h13 = plot(n, pf(1,:), 'bs-');
+% set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
+% set(h13,{'LineWidth'},{0.8});
+% h14=plot(n, pm(1,:), 'md-');
+% set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
+% set(h14,{'LineWidth'},{0.8});
+ylim([0,0.4])
 ylabel('\fontname{Times New Roman}\it{p_{f}} \rm\fontname{宋体}与 \fontname{Times New Roman}\it{p_m}')
 yyaxis right
-h11=plot(n, acc_aver(1,:), 'k^-');
+h11=plot(n, acc_aver(1,:), 'r*-');
 set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
 set(h11,{'LineWidth'},{0.8});
+% h15=plot(n, acc_aver(1,:), 'r<-');
+% set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
+% set(h15,{'LineWidth'},{0.8});
 xlim([0,20])
-ylim([0.75,1])
-legend('\fontname{Times New Roman}\it{ p_{f}}', '\fontname{Times New Roman}\it{ p_m}',' \fontname{Times New Roman}\it{P_{cc}}','fontsize',10.5)
+ylim([0.7,1])
+h1=legend('\fontname{Times New Roman}\it{ p_{f}}', '\fontname{Times New Roman}\it{ p_m}',' \fontname{Times New Roman}\it{P_{cc}}','fontsize',10.5);
+% h1=legend('\fontname{Times New Roman}\it{ p_{f} \rm(\it{N\rm_{max}}\rm=2)}','\fontname{Times New Roman}\it{ p_{m} \rm(\it{N\rm_{max}}\rm=2)}',...
+%     '\fontname{Times New Roman}\it{ p_{f} \rm(\it{N\rm_{max}}=\rm3)}','\fontname{Times New Roman}\it{ p_{m} \rm(\it{N\rm_{max}}\rm=3)}');
+set(h1,'fontsize',10.5,'Orientation','horizontal','NumColumns',1)
 ylabel(' \fontname{Times New Roman}\it{P_{cc}}')
 xlabel('\fontname{宋体}混合信噪比\fontname{Times New Roman}\it{\gamma} \rm(dB)')
+
+% l1=axes('position',get(gca,'position'),'visible','off');
+% h2=legend(l1,[h11,h15],'\fontname{Times New Roman}\it{ P_{cc} \rm(\it{N\rm_{max}}\rm=2)}',...
+%     '\fontname{Times New Roman}\it{ P_{cc} \rm(\it{N\rm_{max}}\rm=3)}');
+% set(h2,'fontsize',10.5)

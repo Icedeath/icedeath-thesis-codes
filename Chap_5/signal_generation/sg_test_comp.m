@@ -11,24 +11,24 @@ rs = 2;               %·ûºÅËÙÂÊ
 N_code = 100;           %·ûºÅÊýÁ¿
 N_filter = 200;       %ÂË²¨Æ÷½×Êý
 length = 8000;  %Final length of signals
-N_samples_m = 25000;    %Number of overlapped samples
-num_classes = 8;
+N_samples_m = 5000;    %Number of overlapped samples
+num_classes = 3;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-Ac_max = 1.1;
-Ac_min = 0.9;
+Ac_max = 1;
+Ac_min = 1;
 
 fc_max = 72;
 fc_min = 68;
 
-max_targets = 3;
-min_targets = 3;
+max_targets = 2;
+min_targets = 2;
 
 max_shift = fs*N_code/rs - length;
 
 fprintf('Generating overlapped samples...\nMax_target = %d\n', max_targets);
 
-for snr1 = 0:20:20
+for snr1 = 0:15
 snr_min = snr1;
 snr_max = snr1;
     
@@ -54,53 +54,23 @@ for i=1:N_samples_m
     for j =1:size(class_i,2)
         switch class_i(j)
             case 1
-                [~,yr] = ask2(N_code,fcc(j),fs,rs);
-                [~,yr] = fir_filter(fs,N_filter,fcc(j)-2*rs,fcc(j)+2*rs,yr);
-                y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(class_i(j),i)=1;
-                fcb(j,:) = [fcc(j)-1.2*2*rs,fcc(j)+1.2*2*rs];
-            case 2
-                [~,yr] = fsk2(N_code,fcc(j),fs,rs);
-                [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
-                y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(class_i(j),i)=1;
-                fcb(j,:) = [fcc(j)-1.2*4*rs,fcc(j)+1.2*4*rs];
-            case 3
-                [~,yr] = fsk4(N_code,fcc(j),fs,rs);
-                [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
-                y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(class_i(j),i)=1;
-                fcb(j,:) = [fcc(j)-1.2*4*rs,fcc(j)+1.2*4*rs];
-            case 4
                 [~,yr] = psk2(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
                 y_train(class_i(j),i)=1;
                 fcb(j,:) = [fcc(j)-1.2*4*rs,fcc(j)+1.2*4*rs];
-            case 5
+            case 2
                 [~,yr] = psk4(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
                 y_train(class_i(j),i)=1;
                 fcb(j,:) = [fcc(j)-1.2*4*rs,fcc(j)+1.2*4*rs];
-            case 6
+            case 3
                 [~,yr] = qam16(N_code,fcc(j),fs,rs);
                 [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
                 y_train(class_i(j),i)=1;
                 fcb(j,:) = [fcc(j)-1.2*4*rs,fcc(j)+1.2*4*rs];
-            case 7
-                [~,yr] = qam64(N_code,fcc(j),fs,rs);
-                [~,yr] = fir_filter(fs,N_filter,fcc(j)-4*rs,fcc(j)+4*rs,yr);
-                y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(class_i(j),i)=1;
-                fcb(j,:) = [fcc(j)-1.2*4*rs,fcc(j)+1.2*4*rs];
-            case 8
-                [~,yr] = msk(N_code,fcc(j),fs,rs);
-                [~,yr] = fir_filter(fs,N_filter,fcc(j)-2.25*rs,fcc(j)+2.25*rs,yr);
-                y(j,:) = yr(1, shift(j):shift(j)+length-1)/sig_e(yr(1, shift(j):shift(j)+length-1))*Acc(j);
-                y_train(class_i(j),i)=1;
-                fcb(j,:) = [fcc(j)-1.2*2.25*rs,fcc(j)+1.2*2.25*rs];
         end
     end
     y_r = sum(y, 1)/sqrt(sig_e(sum(y, 1)));
@@ -116,5 +86,5 @@ Ac = [Ac_min, Ac_max];
 snr = [snr_min, snr_max];
 fc = [fc_min, fc_max];
 fprintf('Saving...\n');
-save(strcat('../samples/te_',num2str(snr1)),'x_train','y_train','Ac', 'fc','snr','length','-v7.3')
+save(strcat('../samples/te_comp_',num2str(snr1)),'x_train','y_train','Ac', 'fc','snr','length','-v7.3')
 end

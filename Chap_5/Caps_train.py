@@ -127,7 +127,7 @@ def train(model, data, args):
     return hist.history
 
 def get_accuracy(cm):
-    return [float(cm[i,i]/np.sum(cm[0:args.num_classes,i])) for i in range(args.num_classes)]
+    return [float(cm[i,i]/np.sum(cm[0:args.num_classes+1,i])) for i in range(args.num_classes)]
 
 
 def save_single():
@@ -152,7 +152,7 @@ if __name__ == "__main__":
                         help="学习率衰减")
     parser.add_argument('-r', '--routings', default=3, type=int,
                         help="routing迭代次数")
-    parser.add_argument('-sf', '--save_file', default='./weights/8000_2_11090.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/8000_3_11090.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
@@ -160,7 +160,7 @@ if __name__ == "__main__":
                         help="是否载入模型，设为1激活")
     parser.add_argument('-p', '--plot', default=0,type=int,
                         help="训练结束后画出loss变化曲线，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/te_2_all.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/te_3_all.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=8,
                         help="类别数")
@@ -250,6 +250,7 @@ if __name__ == "__main__":
             idx_cm[idx2_p, idx2_t] += 1
 
     acc = get_accuracy(idx_cm) 
+    acc_aver = np.trace(idx_cm)/np.sum(idx_cm[0:args.num_classes+1,0:args.num_classes])
     pm = np.sum(idx_cm[args.num_classes,:])/(np.sum(
             idx_cm[0:args.num_classes,0:args.num_classes])+np.sum(idx_cm[args.num_classes,:]))  # Missing Alarm
     pf = np.sum(idx_cm[:, args.num_classes])/(np.sum(
@@ -257,7 +258,8 @@ if __name__ == "__main__":
     print('-' * 30 + 'End  : test' + '-' * 30)   
     print(pf)
     print(pm)
-    print(np.mean(acc))
+    print(acc_aver)
+    sio.savemat('cm_20.mat', {'cm':idx_cm})
 '''
     from keras.utils import plot_model
     plot_model(model, to_file='model.png',show_shapes = True)

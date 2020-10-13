@@ -6,7 +6,6 @@ Created on Mon Apr  8 10:04:51 2019
 """
 
 #coding=utf
-
 from keras.utils import multi_gpu_model
 import numpy as np
 from keras import layers, models, optimizers
@@ -23,9 +22,9 @@ import h5py
 from keras.layers.advanced_activations import ELU
 
 import os
-#os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
+os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 #os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
-#os.environ["CUDA_VISIBLE_DEVICES"]="1"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 
 K.set_image_data_format('channels_last')
 
@@ -165,7 +164,7 @@ def get_cm(y_train, y_pred1, args):
     
 
 def get_accuracy(cm):
-    return [float(cm[i,i]/np.sum(cm[0:args.num_classes,i])) for i in range(args.num_classes)]
+    return [float(cm[i,i]/np.sum(cm[0:args.num_classes+1,i])) for i in range(args.num_classes)]
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on Multi-signal AMC.")
@@ -177,7 +176,7 @@ if __name__ == "__main__":
                         help="学习率衰减")
     parser.add_argument('-r', '--routings', default=3, type=int,
                         help="routing迭代次数")
-    parser.add_argument('-sf', '--save_file', default='./weights/8000_2_11090.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/8000_3_11090.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
@@ -198,14 +197,14 @@ if __name__ == "__main__":
 
 
     print('-'*30 + 'Begin: test' + '-'*30)
-    snr = np.linspace(2,20,10, dtype = int)
+    snr = np.linspace(0,20,11, dtype = int)
     
     acc = []
     acc_aver = []
     pf = []
     pm = []
     for s in snr:
-        args.dataset = './samples/te_2/te_' + str(s)+'.mat'
+        args.dataset = './samples/te_3/te_' + str(s)+'.mat'
         print('Current SNR = %d dB, loading %s...' %(s, args.dataset))
         with h5py.File(args.dataset, 'r') as data:
             for i in data:
@@ -228,17 +227,17 @@ if __name__ == "__main__":
             idx_cm[0:args.num_classes,0:args.num_classes])+np.sum(idx_cm[args.num_classes,:]))  # Missing Alarm
         pf1 = np.sum(idx_cm[:, args.num_classes])/(np.sum(
             idx_cm[0:args.num_classes,0:args.num_classes])+np.sum(idx_cm[:,args.num_classes]))  #False Alarm
-   
+        acc_aver1 = np.trace(idx_cm)/np.sum(idx_cm[0:args.num_classes+1,0:args.num_classes])
         print('False alarm: %.6f ' %pf1)
         print('Missing alarm: %.6f' %pm1)
-        print('Accuracy: %.6f' %np.mean(acc1))
+        print('Accuracy: %.6f' %np.mean(acc_aver1))
         
         acc.append(acc1)
         pf.append(pf1)
         pm.append(pm1)
-        acc_aver.append(np.mean(acc1))
+        acc_aver.append(acc_aver1)
     print('Saving results...')        
-    file_save = 'acc_2_2.mat'
+    file_save = 'acc_3_3.mat'
     sio.savemat(file_save, {'acc':acc, 'acc_aver':acc_aver, 'pf':pf, 'pm': pm})
 
     print('-' * 30 + 'End  : test' + '-' * 30)   

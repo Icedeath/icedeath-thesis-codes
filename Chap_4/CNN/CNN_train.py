@@ -71,7 +71,7 @@ def Build_CNN(input_shape, n_class):
     conv1 = layers.GlobalAveragePooling2D(data_format='channels_first')(conv1)
     #conv1 = layers.Dense(50, activation = 'tanh')(conv1)
     
-    output = layers.Dense(args.num_classes, activation = 'softmax')(conv1)
+    output = layers.Dense(n_class, activation = 'softmax')(conv1)
     
     model = models.Model(x, output)
     return model
@@ -80,7 +80,7 @@ def Build_CNN(input_shape, n_class):
 def train(model, data, args):
     (x_train, y_train) = data
 
-    checkpoint = callbacks.ModelCheckpoint(args.save_file, monitor='val_accuracy', verbose=1, save_best_only=True, 
+    checkpoint = callbacks.ModelCheckpoint(args.save_file, monitor='val_loss', verbose=1, save_best_only=True, 
                                   save_weights_only=True, mode='auto', period=1)
     lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
     model = multi_gpu_model(model, gpus=2)
@@ -99,7 +99,7 @@ def get_accuracy(cm):
 
 
 def save_single():
-    model = CapsNet(input_shape=x_train.shape[1:], n_class=args.num_classes, routings=args.routings)
+    model = Build_CNN(input_shape=x_train.shape[1:], n_class=args.num_classes)
 
     p_model = multi_gpu_model(model, gpus=2)
     p_model.compile(optimizer=optimizers.Adam(lr=args.lr),
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
     parser.add_argument('--epochs', default=5, type=int)
     parser.add_argument('--batch_size', default=32, type=int)
-    parser.add_argument('--lr', default=0.03, type=float,
+    parser.add_argument('--lr', default=0.01, type=float,
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.99, type=float,
                         help="学习率衰减")
@@ -135,9 +135,9 @@ if __name__ == "__main__":
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=0,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/te_20.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/te82a_20.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
-    parser.add_argument('-n', '--num_classes', default=15,
+    parser.add_argument('-n', '--num_classes', default=8,
                         help="类别数")
     args = parser.parse_args()
     print(args)

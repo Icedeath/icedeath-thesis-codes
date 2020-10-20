@@ -83,7 +83,7 @@ def train(model, data, args):
     checkpoint = callbacks.ModelCheckpoint(args.save_file, monitor='val_acc', verbose=1, save_best_only=True, 
                                   save_weights_only=True, mode='auto', period=1)
     lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
-    model = multi_gpu_model(model, gpus=2)
+    #model = multi_gpu_model(model, gpus=2)
     model.compile(optimizer=optimizers.Adam(lr=args.lr),
                   loss= 'categorical_crossentropy',
                   metrics=["accuracy"])
@@ -123,9 +123,9 @@ def get_cm(y,y_pred):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
-    parser.add_argument('--epochs', default=5, type=int)
+    parser.add_argument('--epochs', default=3, type=int)
     parser.add_argument('--batch_size', default=32, type=int)
-    parser.add_argument('--lr', default=0.005, type=float,
+    parser.add_argument('--lr', default=0.0025, type=float,
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.99, type=float,
                         help="学习率衰减")
@@ -135,7 +135,7 @@ if __name__ == "__main__":
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=0,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/te82a_20.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/te82_20.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=8,
                         help="类别数")
@@ -172,7 +172,7 @@ if __name__ == "__main__":
     
     if args.test == 0:    
         history = train(model=model, data=((x_train, y_train)), args=args)
-        save_single()
+        #save_single()
     else:
         args.epochs=0
         history = train(model=model, data=((x_train, y_train)), args=args)

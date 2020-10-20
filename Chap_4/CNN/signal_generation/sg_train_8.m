@@ -109,5 +109,5 @@ end
 snr = [snr_min, snr_max];
 
 fprintf('Saving...\n');
-save(strcat('../samples/te82a_',num2str(snr1)),'x_train','y_train','snr','length','-v7.3')
+save(strcat('../samples/te82_',num2str(snr1)),'x_train','y_train','snr','length','-v7.3')
 end

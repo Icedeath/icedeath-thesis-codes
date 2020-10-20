@@ -131,13 +131,13 @@ def train(model, data, args):
     return hist.history
 
 def get_cm(y_train, y_pred1, args):
-    y_pred = (np.sign(y_pred1-0.46)+1)/2
+    y_pred = (np.sign(y_pred1-0.465)+1)/2
     idx_yt = np.sum(y_train, axis = 1)
     idx_yp = np.sum(y_pred, axis = 1)
     idx_cm = np.zeros([args.num_classes + 1, args.num_classes+1])
     idx = np.arange(0, args.num_classes)
     for i in range(y_pred.shape[0]):
-        if np.mod(i,1000)==0:
+        if np.mod(i,30000)==0:
             print(i)
         y_p = y_pred[i,:]
         y_t = y_train[i,:]
@@ -204,7 +204,7 @@ if __name__ == "__main__":
     pf = []
     pm = []
     for s in snr:
-        args.dataset = './samples/te_3/te_' + str(s)+'.mat'
+        args.dataset = './samples/te_1_3/te_' + str(s)+'.mat'
         print('Current SNR = %d dB, loading %s...' %(s, args.dataset))
         with h5py.File(args.dataset, 'r') as data:
             for i in data:
@@ -236,8 +236,8 @@ if __name__ == "__main__":
         pf.append(pf1)
         pm.append(pm1)
         acc_aver.append(acc_aver1)
-    print('Saving results...')        
-    file_save = 'acc_3_3.mat'
+    file_save = 'acc_3_1_3.mat'
+    print('Saving %s ....'%(file_save))
     sio.savemat(file_save, {'acc':acc, 'acc_aver':acc_aver, 'pf':pf, 'pm': pm})
 
     print('-' * 30 + 'End  : test' + '-' * 30)   

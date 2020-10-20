@@ -80,7 +80,7 @@ def Build_CNN(input_shape, n_class):
 def train(model, data, args):
     (x_train, y_train) = data
 
-    checkpoint = callbacks.ModelCheckpoint(args.save_file, monitor='val_loss', verbose=1, save_best_only=True, 
+    checkpoint = callbacks.ModelCheckpoint(args.save_file, monitor='val_acc', verbose=1, save_best_only=True, 
                                   save_weights_only=True, mode='auto', period=1)
     lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
     model = multi_gpu_model(model, gpus=2)
@@ -125,7 +125,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
     parser.add_argument('--epochs', default=5, type=int)
     parser.add_argument('--batch_size', default=32, type=int)
-    parser.add_argument('--lr', default=0.01, type=float,
+    parser.add_argument('--lr', default=0.005, type=float,
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.99, type=float,
                         help="学习率衰减")

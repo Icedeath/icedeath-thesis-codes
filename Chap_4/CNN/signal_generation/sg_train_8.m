@@ -103,7 +103,7 @@ for i=1:N_samples_m
     bl2 = max(max(fcb));
     
     x_train(:,i) = awgn_bl(fs,N_filter,bl1,bl2,y,snr)';
-    %x_train(:,i) = awgn(y,snr,'measured')';
+    %x_train(:,i) = awgn(y,snr,'measured','db')';
 end
 
 snr = [snr_min, snr_max];

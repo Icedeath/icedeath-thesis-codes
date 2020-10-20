@@ -68,7 +68,7 @@ def Build_CNN(input_shape, n_class):
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
     
-    conv1 = layers.GlobalAveragePooling2D(data_format='channels_first')(conv1)
+    conv1 = layers.GlobalAveragePooling2D(data_format='channels_last')(conv1)
     #conv1 = layers.Dense(50, activation = 'tanh')(conv1)
     
     output = layers.Dense(n_class, activation = 'softmax')(conv1)

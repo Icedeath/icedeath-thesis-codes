@@ -8,10 +8,10 @@ warning off
 fc = 70;              %载波频率
 fs = 400;             %采样频率 
 rs = 2;               %符号速率
-N_code = 500;           %符号数量
+N_code = 50;           %符号数量
 N_filter = 200;       %滤波器阶数
 length = 8000;  %Final length of signals
-N_samples_m = 1000;    %Number of overlapped samples
+N_samples_m = 20000;    %Number of overlapped samples
 num_classes = 15;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 snr_min = 0;

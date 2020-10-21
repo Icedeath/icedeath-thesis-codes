@@ -84,7 +84,7 @@ def train(model, data, args):
                                            filepath=args.save_file.rstrip('.h5') + '_' + 'epoch.{epoch:02d}.h5', 
                                   save_weights_only=True, mode='auto', period=1)
     lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
-    model = multi_gpu_model(model, gpus=2)
+    #model = multi_gpu_model(model, gpus=2)
     model.compile(optimizer=optimizers.Adam(lr=args.lr),
                   loss= 'categorical_crossentropy',
                   metrics=["accuracy"])
@@ -124,19 +124,19 @@ def get_cm(y,y_pred):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
-    parser.add_argument('--epochs', default=20, type=int)
+    parser.add_argument('--epochs', default=0, type=int)
     parser.add_argument('--batch_size', default=64, type=int)
-    parser.add_argument('--lr', default=0.001, type=float,
+    parser.add_argument('--lr', default=0.0015, type=float,
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.99, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_20sGPU.h5',
                         help="权重文件名称")
-    parser.add_argument('-t', '--test', default=0,type=int,
+    parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
-    parser.add_argument('-l', '--load', default=0,type=int,
+    parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/tr_0.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/tr_20.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")
@@ -157,43 +157,43 @@ if __name__ == "__main__":
     with np.load(args.dataset) as data:
         y_train = data['y_train']
     '''
-    with h5py.File(args.dataset, 'r') as data:
-        for i in data:
-            locals()[i] = data[i].value
-            
-    #x_train = x_train[0:785000, :]
-    #y_train = y_train[0:785000, :]
-    
-    x_train = x_train.reshape(x_train.shape[0], 1, x_train.shape[1], 1)
-    
-
-    model = Build_CNN(input_shape=x_train.shape[1:], n_class=args.num_classes)
-
-    
-    
-    if args.test == 0:    
-        history = train(model=model, data=((x_train, y_train)), args=args)
-        #save_single()
-    else:
-        args.epochs=0
-        history = train(model=model, data=((x_train, y_train)), args=args)
-        print('Loading %s' %args.save_file)
       
     print('-'*30 + 'Begin: test' + '-'*30)
+    snr = np.linspace(20,20,1, dtype = int)
     
-    y_pred1 = model.predict(x_train, batch_size=args.batch_size,verbose=1)
-    y=np.argmax(y_train,axis = 1)
-    y_pred = np.argmax(y_pred1,axis = 1)
+    acc = []
+    acc_aver = []
+    idx_cm = []
+    for s in snr:
+        args.dataset = './samples/te_' + str(s)+'.mat'
+        print('Current SNR = %d dB, loading %s...' %(s, args.dataset))
+        with h5py.File(args.dataset, 'r') as data:
+            for i in data:
+                locals()[i] = data[i].value
+                
+        print('Building model...')        
+        x_train = x_train.reshape(x_train.shape[0], 1, x_train.shape[1], 1)
     
-    acc_aver = np.mean(np.equal(y,y_pred))    
-    idx_cm = get_cm(y,y_pred)
+        model = Build_CNN(input_shape=x_train.shape[1:], n_class=args.num_classes)
 
-    acc = get_accuracy(idx_cm) 
+        history = train(model=model, data=((x_train, y_train)), args=args)
+        print('Predicting...') 
+        y_pred1 = model.predict(x_train, batch_size=args.batch_size,verbose=1)
+        y=np.argmax(y_train,axis = 1)
+        y_pred = np.argmax(y_pred1,axis = 1)
+    
+        acc_aver1 = np.mean(np.equal(y,y_pred))    
+        idx_cm1 = get_cm(y,y_pred)
 
+        acc1 = get_accuracy(idx_cm1) 
+
+        print('Accuracy: %.6f' %np.mean(acc_aver1))
+        
+        acc.append(acc1)
+        acc_aver.append(acc_aver1)
+        idx_cm.append(idx_cm1)
+    file_save = 'acc_3_1_3.mat'
+    print('Saving %s ....'%(file_save))
+    sio.savemat(file_save, {'acc':acc, 'acc_aver':acc_aver,'idx_cm':idx_cm})
 
     print('-' * 30 + 'End  : test' + '-' * 30)   
-    
-'''
-    from keras.utils import plot_model
-    plot_model(model, to_file='model.png',show_shapes = True)
-'''

@@ -13,11 +13,11 @@ import argparse
 import scipy.io as sio
 import h5py
 from keras.layers.advanced_activations import ELU
-'''
+
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
-'''
+#os.environ["CUDA_VISIBLE_DEVICES"]="1"
 K.set_image_data_format('channels_last')
 
 
@@ -84,13 +84,15 @@ def train(model, data, args):
                                            filepath=args.save_file.rstrip('.h5') + '_' + 'epoch.{epoch:02d}.h5', 
                                   save_weights_only=True, mode='auto', period=1)
     lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
-    model = multi_gpu_model(model, gpus=2)
+    model = multi_gpu_model(model, gpus=2) 
+    if args.load == 1:
+        model.load_weights(args.save_file)
+        print('Loading %s' %args.save_file)  
+         
     model.compile(optimizer=optimizers.Adam(lr=args.lr),
                   loss= 'categorical_crossentropy',
                   metrics=["accuracy"])
-    if args.load == 1:
-        model.load_weights(args.save_file)
-        print('Loading %s' %args.save_file)
+
     hist = model.fit(x_train, y_train, batch_size=args.batch_size, epochs=args.epochs,
                      validation_split = 0.1, callbacks=[checkpoint, lr_decay])
     return hist.history
@@ -126,17 +128,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
     parser.add_argument('--epochs', default=20, type=int)
     parser.add_argument('--batch_size', default=64, type=int)
-    parser.add_argument('--lr', default=0.001, type=float,
+    parser.add_argument('--lr', default=0.0006, type=float,
                         help="初始学习率")
-    parser.add_argument('--lr_decay', default=0.99, type=float,
+    parser.add_argument('--lr_decay', default=0.95, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_6_epoch.04.h5',
                         help="权重文件名称")
-    parser.add_argument('-t', '--test', default=0,type=int,
+    parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
-    parser.add_argument('-l', '--load', default=0,type=int,
+    parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/tr_0.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/te_6.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")

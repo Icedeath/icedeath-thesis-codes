@@ -11,11 +11,11 @@ rs = 2;               %符号速率
 N_code = 200;           %符号数量
 N_filter = 200;       %滤波器阶数
 length = 8000;  %Final length of signals
-N_samples_m = 200000;    %Number of overlapped samples
+N_samples_m = 450000;    %Number of overlapped samples
 num_classes = 15;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-snr_min = 18;
-snr_max = 18;
+snr_min = 0;
+snr_max = 20;
 
 min_targets = 1;
 max_targets = 1;
@@ -147,5 +147,5 @@ end
 snr = [snr_min, snr_max];
 
 fprintf('Saving...\n');
-save('../samples/tr_18','x_train','y_train','snr','length','-v7.3')
+save('../samples/tr_0_20','x_train','y_train','snr','length','-v7.3')
 toc;

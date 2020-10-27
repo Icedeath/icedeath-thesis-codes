@@ -114,13 +114,13 @@ if __name__ == "__main__":
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.95, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_20.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/vis_0.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/vis_20.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")
@@ -169,4 +169,4 @@ if __name__ == "__main__":
             out=({v_name:out1})
         else:
             out.update({v_name:out1})
-    sio.savemat('vis_0_cnn.mat', {'vis_out':out})
+    sio.savemat('vis_20_cnn.mat', {'vis_out':out,'m':m,'y':np.squeeze(y)})

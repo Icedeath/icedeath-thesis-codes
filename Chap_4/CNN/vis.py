@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Oct 27 22:53:48 2020
+
+@author: Icedeath
+"""
 #coding=utf
 
 from keras.utils import multi_gpu_model
@@ -13,11 +19,12 @@ import argparse
 import scipy.io as sio
 import h5py
 from keras.layers.advanced_activations import ELU
+import keras
 
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
-#os.environ["CUDA_VISIBLE_DEVICES"]="1"
+#os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
+os.environ["CUDA_VISIBLE_DEVICES"]="1"
 K.set_image_data_format('channels_last')
 
 
@@ -97,31 +104,6 @@ def train(model, data, args):
                      validation_split = 0.1, callbacks=[checkpoint, lr_decay])
     return hist.history
 
-def get_accuracy(cm):
-    return [float(cm[i,i]/np.sum(cm[i,:])) for i in range(args.num_classes)]
-
-
-def save_single():
-    model = Build_CNN(input_shape=x_train.shape[1:], n_class=args.num_classes)
-
-    p_model = multi_gpu_model(model, gpus=2)
-    p_model.compile(optimizer=optimizers.Adam(lr=args.lr),
-                  loss= 'categorical_crossentropy',
-                  metrics={})    
-    name = args.save_file.rstrip('.h5') + 'sGPU' + '.h5'
-    p_model.load_weights(args.save_file)
-    model.save_weights(name)
-
-
-
-def get_cm(y,y_pred):
-    cm = np.zeros([args.num_classes, args.num_classes])
-    for i in range(args.num_classes):
-        c = y_pred[y==i]
-        for j in range(c.size):
-            cm[i,c[j]]+=1
-    return cm
-    
     
 
 if __name__ == "__main__":
@@ -132,13 +114,13 @@ if __name__ == "__main__":
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.95, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_20.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/te_20.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/vis_0.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")
@@ -166,36 +148,25 @@ if __name__ == "__main__":
     #x_train = x_train[0:785000, :]
     #y_train = y_train[0:785000, :]
     
-    x_train = x_train.reshape(x_train.shape[0], 1, x_train.shape[1], 1)
+    y=np.transpose(y)
+    y = y.reshape(y.shape[0], 1, y.shape[1], 1)
     
 
-    model = Build_CNN(input_shape=x_train.shape[1:], n_class=args.num_classes)
-
-    
-    
-    if args.test == 0:    
-        history = train(model=model, data=((x_train, y_train)), args=args)
-        #save_single()
-    else:
-        args.epochs=0
-        history = train(model=model, data=((x_train, y_train)), args=args)
-        print('Loading %s' %args.save_file)
-      
-    print('-'*30 + 'Begin: test' + '-'*30)
-    
-    y_pred1 = model.predict(x_train, batch_size=args.batch_size,verbose=1)
-    y=np.argmax(y_train,axis = 1)
-    y_pred = np.argmax(y_pred1,axis = 1)
-    
-    acc_aver = np.mean(np.equal(y,y_pred))    
-    idx_cm = get_cm(y,y_pred)
-
-    acc = get_accuracy(idx_cm) 
+    model = Build_CNN(input_shape=y.shape[1:], n_class=args.num_classes)
 
 
-    print('-' * 30 + 'End  : test' + '-' * 30)   
-    
-'''
-    from keras.utils import plot_model
-    plot_model(model, to_file='model.png',show_shapes = True)
-'''
+    #args.epochs=0
+    #history = train(model=model, data=((x_train, y_train)), args=args)
+    model.load_weights(args.save_file)
+    extractor = keras.Model(inputs=model.inputs,
+                        outputs=[layer.output for layer in model.layers])
+    features = extractor(K.variable(y))
+    for i in range(43):
+        print(i)
+        v_name = 'out'+ str(i+1)
+        out1 = np.squeeze(K.get_value(features[i]))
+        if i==0:
+            out=({v_name:out1})
+        else:
+            out.update({v_name:out1})
+    sio.savemat('vis_0_cnn.mat', {'vis_out':out})

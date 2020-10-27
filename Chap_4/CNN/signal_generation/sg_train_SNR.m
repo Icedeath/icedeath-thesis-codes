@@ -114,25 +114,25 @@ for i=1:N_samples_m
                 fcb(j,:) = [fc-1.2*4*rs,fc+1.2*4*rs];
             case 12
                 [~,yr] = qam128(N_code,fc,fs,rs);
-                [~,yr] = fir_filter(fs,N_filter,fc-2.25*rs,fc+2.25*rs,yr);
+                [~,yr] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1);
                 y_train(class_i(j),i)=1;
                 fcb(j,:) = [fc-1.2*4*rs,fc+1.2*4*rs];
             case 13
                 [~,yr] = qam256(N_code,fc,fs,rs);
-                [~,yr] = fir_filter(fs,N_filter,fc-2*rs,fc+2*rs,yr);
+                [~,yr] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1);
                 y_train(class_i(j),i)=1;
                 fcb(j,:) = [fc-1.2*4*rs,fc+1.2*4*rs];
             case 14
                 [~,yr] = msk(N_code,fc,fs,rs);
-                [~,yr] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,yr);
+                [~,yr] = fir_filter(fs,N_filter,fc-2.25*rs,fc+2.25*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1);
                 y_train(class_i(j),i)=1;
                 fcb(j,:) = [fc-1.2*2.25*rs,fc+1.2*2.25*rs];
             case 15
                 [~,yr] = gmsk(N_code,fc,fs,rs);
-                [~,yr] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,yr);
+                [~,yr] = fir_filter(fs,N_filter,fc-2.25*rs,fc+2.25*rs,yr);
                 y(j,:) = yr(1, shift(j):shift(j)+length-1);
                 y_train(class_i(j),i)=1;
                 fcb(j,:) = [fc-1.2*2.25*rs,fc+1.2*2.25*rs];

@@ -7,23 +7,23 @@ Created on Sun Nov 25 15:27:24 2018
 """
 
 #coding=utf
-from keras.utils import np_utils
-from keras.models import Sequential
-from keras.layers.core import Dense
-from keras.layers import LSTM
-from keras.utils import multi_gpu_model
+import tensorflow.keras.utils as np_utils
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import LSTM
+from tensorflow.keras.utils import multi_gpu_model
 import numpy as np
-from keras import layers, models, optimizers
-from keras import backend as K
-from keras.layers import Lambda
+from tensorflow.keras import layers, models, optimizers
+from tensorflow.keras import backend as K
+from tensorflow.keras.layers import Lambda
 import matplotlib.pyplot as plt
 import tensorflow as tf
-from keras import callbacks
-from keras.layers.normalization import BatchNormalization as BN
+from tensorflow.keras import callbacks
+from tensorflow.keras.layers import BatchNormalization as BN
 import argparse
 import scipy.io as sio
 import h5py
-from keras.layers.advanced_activations import ELU
+from tensorflow.keras.layers import ELU
 
 K.set_image_data_format('channels_last')
 
@@ -55,8 +55,10 @@ def train(model, data, args):
     if args.load == 1:
         model.load_weights(args.save_file)
         print('Loading %s' %args.save_file)
+    # hist = model.fit(x_train, y_train, batch_size=args.batch_size, epochs=args.epochs,
+    #                  validation_split = 0.1, callbacks=[checkpoint, lr_decay])
     hist = model.fit(x_train, y_train, batch_size=args.batch_size, epochs=args.epochs,
-                     validation_split = 0.1, callbacks=[checkpoint, lr_decay])
+                     callbacks=[checkpoint, lr_decay])
     return hist.history
 
 
@@ -79,20 +81,28 @@ if __name__ == "__main__":
                         help="如果需要载入模型，设为1")
     parser.add_argument('-p', '--plot', default=1,type=int,
                         help="设为1时，在训练结束后画出loss变化曲线")
-    parser.add_argument('-d', '--dataset', default='./dataset/data_fe_20.mat',
+    parser.add_argument('-d', '--dataset', default='./dataset/data_train.mat',
                         help="数据文件")
     args = parser.parse_args()
     print(args)
     
     K.set_image_data_format('channels_last')
     
-    x_train=sio.loadmat(args.dataset,appendmat=False)['train_x'][:,[8,9,13,20]]
-    Y_train=np.squeeze(sio.loadmat(args.dataset,appendmat=False)['train_y'])
-    x_test=sio.loadmat(args.dataset,appendmat=False)['test_x'][:,[8,9,13,20]]
-    Y_test=np.squeeze(sio.loadmat(args.dataset,appendmat=False)['test_y'])
+    # x_train=sio.loadmat(args.dataset,appendmat=False)['train_x']
+    data = h5py.File(args.dataset)
+    x_train= np.transpose(data['train_x'])
+    Y_train= np.transpose(data['train_y'])
+    Y_train=np.squeeze(Y_train)
+    #Y_train = np.squeeze(sio.loadmat(args.dataset,appendmat=False)['train_y'])
+    #x_test=sio.loadmat(args.dataset,appendmat=False)['test_x'][:,[7,8,9,13,20]]
+    # x_test=sio.loadmat(args.dataset,appendmat=False)['test_x']
+    # Y_test=np.squeeze(sio.loadmat(args.dataset,appendmat=False)['test_y'])
     y_train = np_utils.to_categorical(Y_train, 8)
-    y_test = np_utils.to_categorical(Y_test, 8)
-
+    #y_test = np_utils.to_categorical(Y_test, 8)
+    N = x_train[0]
+    arr = np.random.shuffle(N)
+    x_train = x_train[arr]
+    y_train = y_train[arr]
     model = build_SAE(input_shape = x_train.shape[1:])
     print('Training using SAE...')
 
@@ -103,9 +113,9 @@ if __name__ == "__main__":
         history = train(model=model, data=((x_train, y_train)), args=args)
         if args.plot == 1:    
             train_loss = np.array(history['loss'])
-            val_loss = np.array(history['val_loss'])
+            #val_loss = np.array(history['val_loss'])
             plt.plot(np.arange(0, args.epochs, 1),train_loss,label="train_loss",color="red",linewidth=1.5)
-            plt.plot(np.arange(0, args.epochs, 1),val_loss,label="val_loss",color="blue",linewidth=1.5)
+            #plt.plot(np.arange(0, args.epochs, 1),val_loss,label="val_loss",color="blue",linewidth=1.5)
             plt.legend()
             plt.show()
             plt.savefig('loss.png')
@@ -115,8 +125,21 @@ if __name__ == "__main__":
       
     print('-'*30 + 'Begin: test' + '-'*30)
     print('Predicting final symbols...')
-    y_pred=model.predict_classes(x_test,verbose=0)
-    test_accuracy = np.mean(np.equal(y_test,y_pred))
-    print("test accuarcy:",test_accuracy)
-    print('-' * 30 + 'End: test' + '-' * 30)   
-    sio.savemat('y_pred.mat', {'y_pred':y_pred})
+    for snr in range(0,21,2):
+        fileName = './dataset/data_fe_'+str(snr)+'.mat'
+        # fileName = './dataset/data_train.mat'
+        # data = h5py.File(fileName)
+        # x_test= np.transpose(data['test_x'])
+        # Y_test= np.transpose(data['test_y'])
+        # Y_test= np.squeeze(Y_test)
+        x_test=sio.loadmat(fileName,appendmat=False)['test_x']
+        Y_test=np.squeeze(sio.loadmat(fileName,appendmat=False)['test_y'])
+        #y_test = np_utils.to_categorical(Y_test, 8)
+
+        y_pred=model.predict(x_test,verbose=0)
+        y_label_pred = np.argmax(y_pred, axis=1)
+        #y_label = 
+        test_accuracy = np.mean(np.equal(Y_test,y_label_pred))
+        print("test accuarcy:",test_accuracy)
+        print('-' * 30 + 'End: test' + '-' * 30)   
+        sio.savemat('y_pred.mat', {'y_pred':y_pred})

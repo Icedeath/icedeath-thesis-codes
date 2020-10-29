@@ -11,6 +11,9 @@ fe6 = zeros((snr_max-snr_min)/2+1,size(mode1,2));
 fe7 = zeros((snr_max-snr_min)/2+1,size(mode1,2));
 fe8 = zeros((snr_max-snr_min)/2+1,size(mode1,2));
 
+
+
+
 for i=1:(snr_max-snr_min)/2+1
     fe1(i,:) = mean(mode1((i-1)*N_samples+1:(i-1)*N_samples+N_samples,:),1);
     fe2(i,:) = mean(mode2((i-1)*N_samples+1:(i-1)*N_samples+N_samples,:),1);
@@ -21,6 +24,8 @@ for i=1:(snr_max-snr_min)/2+1
     fe7(i,:) = mean(mode7((i-1)*N_samples+1:(i-1)*N_samples+N_samples,:),1);
     fe8(i,:) = mean(mode8((i-1)*N_samples+1:(i-1)*N_samples+N_samples,:),1);
 end
+
+
 
 n=0:2:20;
 for j=1:25

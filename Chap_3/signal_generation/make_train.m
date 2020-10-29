@@ -2,6 +2,9 @@ clear all
 clc
 load ../dataset/data_fe
 
+n_tr=300;
+n_te=500;
+
 tr1 = zeros(N_samples,25);
 tr2 = zeros(N_samples,25);
 tr3 = zeros(N_samples,25);
@@ -19,10 +22,10 @@ try5 = ones(N_samples,1)*4;
 try6 = ones(N_samples,1)*5;
 try7 = ones(N_samples,1)*6;
 try8 = ones(N_samples,1)*7;
-train_y=[try1(1:1500,:);try2(1:1500,:);try3(1:1500,:);try4(1:1500,:);try5(1:1500,:)...
-    ;try6(1:1500,:);try7(1:1500,:);try8(1:1500,:)];
-test_y=[try1(1501:2000,:);try2(1501:2000,:);try3(1501:2000,:);try4(1501:2000,:);try5(1501:2000,:)...
-    ;try6(1501:2000,:);try7(1501:2000,:);try8(1501:2000,:)];
+train_y=[try1(1:n_tr,:);try2(1:n_tr,:);try3(1:n_tr,:);try4(1:n_tr,:);try5(1:n_tr,:)...
+    ;try6(1:n_tr,:);try7(1:n_tr,:);try8(1:n_tr,:)];
+test_y=[try1(N_samples-n_te+1:N_samples,:);try2(N_samples-n_te+1:N_samples,:);try3(N_samples-n_te+1:N_samples,:);try4(N_samples-n_te+1:N_samples,:);try5(N_samples-n_te+1:N_samples,:)...
+    ;try6(N_samples-n_te+1:N_samples,:);try7(N_samples-n_te+1:N_samples,:);try8(N_samples-n_te+1:N_samples,:)];
 for snr = snr_min:2:snr_max
     trx1 = mode1((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
     trx2 = mode2((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
@@ -32,10 +35,10 @@ for snr = snr_min:2:snr_max
     trx6 = mode6((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
     trx7 = mode7((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
     trx8 = mode8((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
-    train_x=[trx1(1:1500,:);trx2(1:1500,:);trx3(1:1500,:);trx4(1:1500,:);trx5(1:1500,:)...
-    ;trx6(1:1500,:);trx7(1:1500,:);trx8(1:1500,:)];
-    test_x=[trx1(1501:2000,:);trx2(1501:2000,:);trx3(1501:2000,:);trx4(1501:2000,:);trx5(1501:2000,:)...
-    ;trx6(1501:2000,:);trx7(1501:2000,:);trx8(1501:2000,:)];
+    train_x=[trx1(1:n_tr,:);trx2(1:n_tr,:);trx3(1:n_tr,:);trx4(1:n_tr,:);trx5(1:n_tr,:)...
+    ;trx6(1:n_tr,:);trx7(1:n_tr,:);trx8(1:n_tr,:)];
+    test_x=[trx1(N_samples-n_te+1:N_samples,:);trx2(N_samples-n_te+1:N_samples,:);trx3(N_samples-n_te+1:N_samples,:);trx4(N_samples-n_te+1:N_samples,:);trx5(N_samples-n_te+1:N_samples,:)...
+    ;trx6(N_samples-n_te+1:N_samples,:);trx7(N_samples-n_te+1:N_samples,:);trx8(N_samples-n_te+1:N_samples,:)];
     a=strcat('Saving data_fe_',num2str(snr),'.mat...');
     disp(a)
     for i = 1:25

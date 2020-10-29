@@ -130,7 +130,7 @@ if __name__ == "__main__":
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.99, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_20sGPU.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0_20.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
@@ -159,7 +159,7 @@ if __name__ == "__main__":
     '''
       
     print('-'*30 + 'Begin: test' + '-'*30)
-    snr = np.linspace(20,20,1, dtype = int)
+    snr = np.linspace(0,20,11, dtype = int)
     
     acc = []
     acc_aver = []
@@ -192,7 +192,7 @@ if __name__ == "__main__":
         acc.append(acc1)
         acc_aver.append(acc_aver1)
         idx_cm.append(idx_cm1)
-    file_save = 'acc_3_1_3.mat'
+    file_save = 'acc_0_20.mat'
     print('Saving %s ....'%(file_save))
     sio.savemat(file_save, {'acc':acc, 'acc_aver':acc_aver,'idx_cm':idx_cm})
 

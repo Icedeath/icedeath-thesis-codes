@@ -120,7 +120,7 @@ if __name__ == "__main__":
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/vis_20.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/tsne_20.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")
@@ -147,8 +147,11 @@ if __name__ == "__main__":
             
     #x_train = x_train[0:785000, :]
     #y_train = y_train[0:785000, :]
+    y=x_train
     
-    y=np.transpose(y)
+    y_r = np.argmax(y_train,axis = 1)
+    
+    #y=np.transpose(y)
     y = y.reshape(y.shape[0], 1, y.shape[1], 1)
     
 
@@ -160,7 +163,14 @@ if __name__ == "__main__":
     model.load_weights(args.save_file)
     extractor = keras.Model(inputs=model.inputs,
                         outputs=[layer.output for layer in model.layers])
-    features = extractor(K.variable(y))
+    out = []
+    for i in range (15):
+        print(i)
+        features = extractor(K.variable(y[100*i:100*(i+1),:,:,:]))
+        out.append(np.squeeze(K.get_value(features[42])))
+    #features = extractor(K.variable(y))
+    #out = np.squeeze(K.get_value(features[42]))
+    '''
     for i in range(43):
         print(i)
         v_name = 'out'+ str(i+1)
@@ -169,4 +179,6 @@ if __name__ == "__main__":
             out=({v_name:out1})
         else:
             out.update({v_name:out1})
-    sio.savemat('vis_20_cnn.mat', {'vis_out':out,'m':m,'y':np.squeeze(y)})
+    '''
+    sio.savemat('MDS_20.mat', {'vis_out':out,'y':y_r})
+    #sio.savemat('MDS_20.mat', {'vis_out':out,'m':m,'y':np.squeeze(y)})

@@ -14,7 +14,7 @@ length = 8000;
 
 num_classes = 15;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-snr = 0;
+snr = 20;
 
 
 %%
@@ -79,23 +79,23 @@ y(11,:) = awgn_bl(fs,N_filter,fc-4*1.2*rs,fc+4*1.2*rs,yr,snr)';
 m(:,11) = mr';
 
 [mr,yr] = qam128(N_code,fc,fs,rs);
-[~,yr] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,yr);
+[~,yr] = fir_filter(fs,N_filter,fc-2.25*rs,fc+2.25*rs,yr);
 y(12,:) = awgn_bl(fs,N_filter,fc-4*1.2*rs,fc+4*1.2*rs,yr,snr)';
 m(:,12) = mr';
 
 [mr,yr] = qam256(N_code,fc,fs,rs);
-[~,yr] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,yr);
+[~,yr] = fir_filter(fs,N_filter,fc-2*rs,fc+2*rs,yr);
 y(13,:) = awgn_bl(fs,N_filter,fc-4*1.2*rs,fc+4*1.2*rs,yr,snr)';
 m(:,13) = mr';
 
 [mr,yr] = msk(N_code,fc,fs,rs);
-[~,yr] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,yr);
-y(14,:) = awgn_bl(fs,N_filter,fc-2.25*1.2*rs,fc+2.25*1.2*rs,yr,snr)';
+[~,yr] = fir_filter(fs,N_filter,fc-2.25*rs,fc+2.25*rs,yr);
+y(14,:) = awgn_bl(fs,N_filter,fc-4*1.2*rs,fc+4*1.2*rs,yr,snr)';
 m(:,14) = mr';
 
 [mr,yr] = gmsk(N_code,fc,fs,rs);
-[~,yr] = fir_filter(fs,N_filter,fc-4*rs,fc+4*rs,yr);
-y(15,:) = awgn_bl(fs,N_filter,fc-2.25*1.2*rs,fc+2.25*1.2*rs,yr,snr)';
+[~,yr] = fir_filter(fs,N_filter,fc-2.25*rs,fc+2.25*rs,yr);
+y(15,:) = awgn_bl(fs,N_filter,fc-4*1.2*rs,fc+4*1.2*rs,yr,snr)';
 m(:,15) = mr';
 %%
 save(strcat('../samples/vis_',num2str(snr)),'y','m','snr','-v7.3')

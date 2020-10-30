@@ -26,7 +26,7 @@ def get_cm(y,y_pred,nb_classes):
 
 def get_accuracy(cm):
     return [float(cm[i,i]/np.sum(cm[i,:])) for i in range(nb_classes)]
-snr1=0
+snr1=20
 
 snr1='%d' %snr1
 
@@ -77,5 +77,5 @@ for i in snr:
      ace.append(accuracy)
      ace_m.append(accuracy_m)
      
-     savedata='acc_lin_'+snr1+'.mat'
+     savedata='acc_4_'+snr1+'.mat'
 sio.savemat(savedata, {'ace':ace,'ace_m':ace_m})

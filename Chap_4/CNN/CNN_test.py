@@ -136,7 +136,7 @@ if __name__ == "__main__":
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/tr_20.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/tr_0_20.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")

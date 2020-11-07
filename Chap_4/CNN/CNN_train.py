@@ -128,7 +128,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
     parser.add_argument('--epochs', default=20, type=int)
     parser.add_argument('--batch_size', default=64, type=int)
-    parser.add_argument('--lr', default=0.0015, type=float,
+    parser.add_argument('--lr', default=0.001, type=float,
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.9, type=float,
                         help="学习率衰减")

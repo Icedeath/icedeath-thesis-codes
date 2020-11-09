@@ -12,7 +12,7 @@ N_code = 1500;           %符号数量
 N_filter = 200;      %滤波器阶数
 snr_min = 0;         %信噪比范围
 snr_max = 20;         
-N_samples = 1;     %每个SNR下样本数量
+N_samples = 5000;     %每个SNR下样本数量
 num_fe = 25;          %特征数量 
 
 disp('Initializing...')
@@ -50,7 +50,7 @@ disp('Feature Exaction started...')
 tic;
 for snr = snr_min:2:snr_max
     for i=1:N_samples
-        if mod(i,1)==0
+        if mod(i,200)==0
             disp(['Current SNR=',num2str(snr),'dB'])
             disp(['N_sample=',num2str(i)])
         end

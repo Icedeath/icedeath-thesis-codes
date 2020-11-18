@@ -8,11 +8,11 @@ addpath(genpath('../'))
 fc = 70;              %载波频率
 fs = 400;             %采样频率 
 rs = 2;               %符号速率
-N_code = 1500;           %符号数量
+N_code = 1200;           %符号数量
 N_filter = 200;      %滤波器阶数
 snr_min = 0;         %信噪比范围
 snr_max = 20;         
-N_samples = 5000;     %每个SNR下样本数量
+N_samples = 3000;     %每个SNR下样本数量
 num_fe = 25;          %特征数量 
 
 disp('Initializing...')

@@ -12,24 +12,16 @@ for i=1:8
         end    
 end
 
-var = zeros(1,25);
+vars = zeros(1,25);
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%瞬时特征不计算2ASK%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 for i=1:8
-eval(['var(i)=varf(var_f',num2str(i),'(2:8,:));'])
+eval(['vars(i)=mean(var(transpose(var_f',num2str(i),'(2:8,:))));'])
 end
 
 for i=9:25
-eval(['var(i)=varf(var_f',num2str(i),');'])
+eval(['vars(i)=mean(var(transpose(var_f',num2str(i),')));'])
 end
 
-var
+vars
 
-
-function varff = varf(var_f)
-varff = zeros(1,8);
-for i=1:size(var_f,1)
-    varff(i)=var(var_f(i,:)/mean(var_f,'all')-1);
-end
-varff = mean(varff);
-end

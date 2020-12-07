@@ -28,7 +28,7 @@ end
 
 
 n=0:2:20;
-for j=1:25
+for j=[8,9,11,21,24]
 %j=8;
 figure()
 plot(n,fe1(:,j),'bs-')
@@ -42,7 +42,7 @@ plot(n,fe6(:,j),'k^-')
 plot(n,fe7(:,j),'ko-')
 plot(n,fe8(:,j),'rs-')
 set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
-l = legend('2-ASK','2-FSK','4-FSK','8-FSK','2-PSK','4-PSK','8-PSK','16-QAM');
-xlabel('\fontname{宋体}信噪比\fontname{Times New Roman}/dB')
-ylabel('\fontname{宋体}信噪比\fontname{Times New Roman}/dB')
+l = legend('2-ASK','2-FSK','4-FSK','8-FSK','2-PSK','4-PSK','8-PSK','16-QAM','Location','EastOutside');
+xlabel('\fontname{宋体}信噪比\fontname{Times New Roman}(dB)')
+ylabel('\fontname{宋体}特征值')
 end

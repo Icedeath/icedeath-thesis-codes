@@ -34,7 +34,7 @@ train_set='./dataset/data_fe_'+snr1+'.mat'
 
 
 print('Loading data...')
-train_x=sio.loadmat(train_set,appendmat=False)['train_x'][:,[8,9,23]]#[:,[7,8,10,20,23]]
+train_x=sio.loadmat(train_set,appendmat=False)['train_x'][:,[7,8,10,20,23]]
 train_y=np.squeeze(sio.loadmat(train_set,appendmat=False)['train_y'])
 #test_x=sio.loadmat(train_set,appendmat=False)['train_x'][:,[7,8,9,13,20]]
 #test_y=np.squeeze(sio.loadmat(train_set,appendmat=False)['train_y'])
@@ -65,7 +65,7 @@ for i in snr:
      print(i)
      a='%d' %i
      test_set='./dataset/data_fe_'+a+'.mat'
-     test_x=sio.loadmat(test_set,appendmat=False)['test_x'][:,[8,9,23]]#[:,[7,8,10,20,23]]
+     test_x=sio.loadmat(test_set,appendmat=False)['test_x'][:,[7,8,10,20,23]]
      test_y=np.squeeze(sio.loadmat(test_set,appendmat=False)['test_y'])
          
      
@@ -77,5 +77,5 @@ for i in snr:
      ace.append(accuracy)
      ace_m.append(accuracy_m)
      
-     savedata='acc_4_'+snr1+'.mat'
+     savedata='acc_5_'+snr1+'.mat'
 sio.savemat(savedata, {'ace':ace,'ace_m':ace_m})

@@ -122,7 +122,7 @@ load dataset/data_fe_20
 
 
 n=0:2:20;
-for j=[8,9,11,21,24]
+for j=[8,9]
 %j=8;
 figure()
 plot(n,fe1(:,j),'bs-')

@@ -2,8 +2,8 @@ clear all
 %close all
 
 
-load CNN_MDS_20
-tsne = MDS;
+load CNN_tsne_20
+%tsne = MDS;
 a=min(tsne(:));
 b=max(tsne(:));
 tsne=(tsne-a)/(b-a);

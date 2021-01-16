@@ -8,11 +8,11 @@ addpath(genpath('../'))
 fc = 70;              %载波频率
 fs = 400;             %采样频率 
 rs = 2;               %符号速率
-N_code = 1200;           %符号数量
+N_code = 1500;           %符号数量
 N_filter = 200;      %滤波器阶数
 snr_min = 0;         %信噪比范围
 snr_max = 20;         
-N_samples = 3000;     %每个SNR下样本数量
+N_samples = 5000;     %每个SNR下样本数量
 num_fe = 25;          %特征数量 
 
 disp('Initializing...')
@@ -194,5 +194,6 @@ for snr = snr_min:2:snr_max
     end
 end
 toc;
-save ../dataset/data_fe_15 mode1 mode2 mode3 mode4 mode5 mode6 mode7 mode8 snr_min snr_max N_code N_samples
+save ../dataset/data_fe_15 mode1 mode2 mode3 mode4 mode5 mode6 mode7 mode8 mode9 mode10 ...
+    mode11 mode12 mode13 mode14 mode15 snr_min snr_max N_code N_samples
     

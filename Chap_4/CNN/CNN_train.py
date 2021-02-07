@@ -22,19 +22,6 @@ os.environ["CUDA_VISIBLE_DEVICES"]="0"
 #os.environ["CUDA_VISIBLE_DEVICES"]="1"
 K.set_image_data_format('channels_last')
 
-class SeBlock(keras.layers.Layer):   
-    def __init__(self, reduction=4,**kwargs):
-        super(SeBlock,self).__init__(**kwargs)
-        self.reduction = reduction
-    def build(self,input_shape):#构建layer时需要实现
-    	#input_shape     
-    	pass
-    def call(self, inputs):
-        x = keras.layers.GlobalAveragePooling2D()(inputs)
-        x = keras.layers.Dense(int(x.shape[-1]) // self.reduction, use_bias=False,activation=keras.activations.relu)(x)
-        x = keras.layers.Dense(int(inputs.shape[-1]), use_bias=False,activation=keras.activations.hard_sigmoid)(x)
-        return keras.layers.Multiply()([inputs,x])    #给通道加权重
-        #return inputs*x  
 
 def Build_CNN(input_shape, n_class):
     x = layers.Input(shape=input_shape)
@@ -46,7 +33,6 @@ def Build_CNN(input_shape, n_class):
     conv1 = BN()(conv1)
     conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
     
-    conv1 = SeBlock()(conv1)
     conv1 = layers.Conv2D(filters=96, kernel_size=(1,9), strides=1, padding='same',dilation_rate = 4)(conv1)
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
@@ -54,7 +40,7 @@ def Build_CNN(input_shape, n_class):
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
     conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
-
+    
     conv1 = layers.Conv2D(filters=128, kernel_size=(1,6), strides=1, padding='same',dilation_rate = 3)(conv1)
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
@@ -84,13 +70,14 @@ def Build_CNN(input_shape, n_class):
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
     
-    conv1 = layers.Flatten()(conv1)
+    conv1 = layers.GlobalAveragePooling2D(data_format='channels_last')(conv1)
     #conv1 = layers.Dense(50, activation = 'tanh')(conv1)
     
     output = layers.Dense(n_class, activation = 'softmax')(conv1)
     
     model = models.Model(x, output)
     return model
+
 
 
 def train(model, data, args):
@@ -150,13 +137,13 @@ if __name__ == "__main__":
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.9, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0_20_epoch.10.h5',
                         help="权重文件名称")
-    parser.add_argument('-t', '--test', default=0,type=int,
+    parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
-    parser.add_argument('-l', '--load', default=0,type=int,
+    parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/tr_0.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/te_18.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")

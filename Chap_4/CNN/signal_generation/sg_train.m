@@ -1,21 +1,21 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CNNÐÅºÅÉú³É£¨ÑµÁ·¼¯£©%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CNNï¿½Åºï¿½ï¿½ï¿½É£ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all;
 clear all;
 clc;
 
 warning off
-%% ²ÎÊýÉèÖÃÇø
-fc = 70;              %ÔØ²¨ÆµÂÊ
-fs = 200;             %²ÉÑùÆµÂÊ 
-rs = 2;               %·ûºÅËÙÂÊ
-N_code = 200;           %·ûºÅÊýÁ¿
-N_filter = 200;       %ÂË²¨Æ÷½×Êý
-length = 14000;  %Final length of signals
-N_samples_m = 20000;    %Number of overlapped samples
+%% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+fc = 70;              %ï¿½Ø²ï¿½Æµï¿½ï¿½
+fs = 200;             %ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ 
+rs = 2;               %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+N_code = 200;           %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+N_filter = 200;       %ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+length = 12000;  %Final length of signals
+N_samples_m = 550000;    %Number of overlapped samples
 num_classes = 15;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 snr_min = 0;
-snr_max = 20;
+snr_max = 0;
 
 min_targets = 1;
 max_targets = 1;
@@ -35,6 +35,7 @@ for i=1:N_samples_m
     if mod(i, 2000) == 0
         fprintf('Current SNR = %d dB',snr);
         fprintf('   itr=%d\n',i);
+
     end
     class_i = randperm(num_classes);
     class_i = class_i(1:idx_tar(i));
@@ -147,5 +148,5 @@ end
 snr = [snr_min, snr_max];
 
 fprintf('Saving...\n');
-save('../samples/te_0_20','x_train','y_train','snr','length','-v7.3')
+save('../samples/tr_0','x_train','y_train','snr','length','-v7.3')
 toc;

@@ -1,4 +1,4 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CNN�ź���ɣ�ѵ������%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CNN�ź���ɣ�ѵ������?%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all;
 clear all;
 clc;
@@ -7,11 +7,11 @@ warning off
 %% ����������
 fc = 70;              %�ز�Ƶ��
 fs = 200;             %����Ƶ�� 
-rs = 2;               %�������
-N_code = 200;           %�������
+rs = 2;               %�������?
+N_code = 200;           %�������?
 N_filter = 200;       %�˲�������
-length = 12000;  %Final length of signals
-N_samples_m = 550000;    %Number of overlapped samples
+length = 14000;  %Final length of signals
+N_samples_m = 3000;    %Number of overlapped samples
 num_classes = 15;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 snr_min = 0;
@@ -148,5 +148,5 @@ end
 snr = [snr_min, snr_max];
 
 fprintf('Saving...\n');
-save('../samples/tr_0','x_train','y_train','snr','length','-v7.3')
+save('../samples/tsne_0','x_train','y_train','snr','length','-v7.3')
 toc;

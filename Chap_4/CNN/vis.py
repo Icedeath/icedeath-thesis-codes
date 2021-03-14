@@ -114,13 +114,13 @@ if __name__ == "__main__":
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.95, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_20.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0_20.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/tsne_20.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/te_0_20.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")
@@ -164,10 +164,11 @@ if __name__ == "__main__":
     extractor = keras.Model(inputs=model.inputs,
                         outputs=[layer.output for layer in model.layers])
     out = []
-    for i in range (15):
+    for i in range (200):#1500个样本，100一个batch。。防溢出(range范围根据样本数量自己算)
         print(i)
         features = extractor(K.variable(y[100*i:100*(i+1),:,:,:]))
-        out.append(np.squeeze(K.get_value(features[42])))
+        out.extend(np.squeeze(K.get_value(features[42])))
+    vis_out = np.array(out)
     #features = extractor(K.variable(y))
     #out = np.squeeze(K.get_value(features[42]))
     '''
@@ -180,5 +181,5 @@ if __name__ == "__main__":
         else:
             out.update({v_name:out1})
     '''
-    sio.savemat('MDS_20.mat', {'vis_out':out,'y':y_r})
+    sio.savemat('out_0_20.mat', {'vis_out':vis_out,'y':y_r})
     #sio.savemat('MDS_20.mat', {'vis_out':out,'m':m,'y':np.squeeze(y)})

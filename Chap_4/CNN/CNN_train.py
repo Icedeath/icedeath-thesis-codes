@@ -137,7 +137,7 @@ if __name__ == "__main__":
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.9, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0_10_epoch.11.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0_20_epoch.15.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")

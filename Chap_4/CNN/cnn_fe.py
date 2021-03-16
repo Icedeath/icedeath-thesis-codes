@@ -122,7 +122,7 @@ if __name__ == "__main__":
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=0,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/te_0_20.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/te_16.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")
@@ -157,19 +157,23 @@ if __name__ == "__main__":
     model.load_weights(args.save_file)
     x = model_fe.input
     x1 = model_fe.output
-    x1 = layers.Dense(2, activation = 'tanh')(x1)
+    x1 = layers.Dense(5, activation = 'tanh')(x1)
     output = layers.Dense(args.num_classes, activation = 'softmax')(x1)
     
     model_re = models.Model(x,output)
-    #model_re.load_weights(args.save_file)
+    
+    fe_out = models.Model(x,x1)
+    
     for layer in model_fe.layers:  
         layer.trainable = False
     
-    args.epochs=100
+    args.epochs=0
     history = train(model=model_re, data=((x_train, y_train)), args=args)
     
-
-    
+    model_re.load_weights('./weights/cnn_0_20_fe.h5')
+    print('Predicting...')
+    fe = fe_out.predict(x_train,batch_size = 64,verbose = 1)
+    sio.savemat('fe_16.mat', {'fe':fe,'y':y_r})
     
     
 

@@ -1,8 +1,8 @@
 clear all
 clc
-load ../dataset/data_fe
+load ../dataset/fe_15
 
-n_tr=5;
+n_tr=200;
 n_te=1000;
 
 tr1 = zeros(N_samples,25);
@@ -26,15 +26,15 @@ train_y=[try1(1:n_tr,:);try2(1:n_tr,:);try3(1:n_tr,:);try4(1:n_tr,:);try5(1:n_tr
     ;try6(1:n_tr,:);try7(1:n_tr,:);try8(1:n_tr,:)];
 test_y=[try1(N_samples-n_te+1:N_samples,:);try2(N_samples-n_te+1:N_samples,:);try3(N_samples-n_te+1:N_samples,:);try4(N_samples-n_te+1:N_samples,:);try5(N_samples-n_te+1:N_samples,:)...
     ;try6(N_samples-n_te+1:N_samples,:);try7(N_samples-n_te+1:N_samples,:);try8(N_samples-n_te+1:N_samples,:)];
-for snr = snr_min:2:snr_max
-    trx1 = mode1((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
-    trx2 = mode2((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
-    trx3 = mode3((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
-    trx4 = mode4((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
-    trx5 = mode5((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
-    trx6 = mode6((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
-    trx7 = mode7((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
-    trx8 = mode8((snr-snr_min)/2*N_samples+1:(snr-snr_min)/2*N_samples+N_samples,:);
+for snr = snr_min:snr_max
+    trx1 = mode1((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
+    trx2 = mode2((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
+    trx3 = mode3((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
+    trx4 = mode4((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
+    trx5 = mode5((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
+    trx6 = mode6((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
+    trx7 = mode7((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
+    trx8 = mode8((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
     train_x=[trx1(1:n_tr,:);trx2(1:n_tr,:);trx3(1:n_tr,:);trx4(1:n_tr,:);trx5(1:n_tr,:)...
     ;trx6(1:n_tr,:);trx7(1:n_tr,:);trx8(1:n_tr,:)];
     test_x=[trx1(N_samples-n_te+1:N_samples,:);trx2(N_samples-n_te+1:N_samples,:);trx3(N_samples-n_te+1:N_samples,:);trx4(N_samples-n_te+1:N_samples,:);trx5(N_samples-n_te+1:N_samples,:)...

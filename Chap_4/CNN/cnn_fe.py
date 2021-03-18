@@ -157,9 +157,9 @@ if __name__ == "__main__":
     model.load_weights(args.save_file)
     x = model_fe.input
     x1 = model_fe.output
-    x1 = layers.Dense(5)(x1)
-    x1 = ELU(alpha=0.5)(x1)
-    output = layers.Dense(args.num_classes, activation = 'softmax')(x1)
+    x1 = layers.Dense(4)(x1)
+    x2 = ELU(alpha=0.5)(x1)
+    output = layers.Dense(args.num_classes, activation = 'softmax')(x2)
     
     model_re = models.Model(x,output)
     
@@ -171,7 +171,8 @@ if __name__ == "__main__":
     args.epochs=0
     history = train(model=model_re, data=((x_train, y_train)), args=args)
     
-    model_re.load_weights('./weights/cnn_0_20_fe_elu.h5')
+    model_re.load_weights('./weights/cnn_0_20_fe_raw4.h5')
+
     print('Predicting...')
     fe = fe_out.predict(x_train,batch_size = 64,verbose = 1)
     sio.savemat('fe_20.mat', {'fe':fe,'y':y_r})

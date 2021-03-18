@@ -3,7 +3,6 @@ fe_1 = zeros(11,15);
 fe_2 = fe_1;
 fe_3 = fe_1;
 fe_4 = fe_1;
-fe_5 = fe_1;
 
 for j = 0:2:20
     file_name = strcat('fe_',num2str(j));
@@ -12,7 +11,7 @@ y = y + 1;
 for i = 1:15
     eval(['fe',num2str(i),'=fe(y==',num2str(i),',:);']);
     eval(['fe',num2str(i),'_m=mean(fe',num2str(i),',1);']);
-    for k = 1:5
+    for k = 1:4
        eval(['fe_',num2str(k),'(j/2+1, i) = fe',num2str(i),'_m(k);' ])
     end
 end
@@ -20,7 +19,7 @@ end
 
 lw = 1;
 n = 0:2:20;
-for k = 1:5
+for k = 1:4
 figure()
 set(gca,'FontSize',10.5,'Fontname', 'Times New Roman');
 hold on

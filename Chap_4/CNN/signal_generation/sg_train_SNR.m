@@ -22,7 +22,7 @@ max_shift = fs*N_code/rs - length;
 
 fprintf('Generating training samples...\n');
 
-for snr1 = 0:20
+for snr1 =5:10:15
  tic;
 snr_min = snr1;
 snr_max = snr1;

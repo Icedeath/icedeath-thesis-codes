@@ -48,7 +48,7 @@ h3n  = fir1(N_filter, [fc-1.2*2.25*rs fc+1.2*2.25*rs]/(fs/2), 'bandpass', win, f
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 disp('Feature Exaction started...')
 tic;
-for snr = snr_min:2:snr_max
+for snr = snr_min:snr_max
     for i=1:N_samples
         if mod(i,200)==0
             disp(['Current SNR=',num2str(snr),'dB'])

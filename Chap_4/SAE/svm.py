@@ -26,7 +26,7 @@ def get_cm(y,y_pred,nb_classes):
 
 def get_accuracy(cm):
     return [float(cm[i,i]/np.sum(cm[i,:])) for i in range(nb_classes)]
-snr1=4
+snr1=10
 
 snr1='%d' %snr1
 

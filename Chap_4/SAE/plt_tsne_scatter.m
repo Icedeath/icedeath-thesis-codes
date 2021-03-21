@@ -2,12 +2,12 @@ clear all
 %close all
 
 
-load CNN_tsne_20
-%tsne = MDS;
+load SAE_tsne_5
+
 a=min(tsne(:));
 b=max(tsne(:));
 tsne=(tsne-a)/(b-a);
-a=8;
+a=10;
 
 %col=rand(3,15);
 
@@ -15,6 +15,7 @@ a=8;
 
 load col
 col = col';
+y = y+1;
 c=zeros(3,size(tsne,1));
 for i=1:size(tsne,1)
     c(:,i)=col(:,y(i));
@@ -25,15 +26,16 @@ figure()
 hold on
 col=col';
 f='filled';
-for i=1:15
+for i=1:10
     c1=d1(y==i);
     c2=d2(y==i);
     eval(['y',num2str(i),'=scatter(c1,c2,a,col(i,:),','f);'])
 end
 grid on
+box on
 h = legend('2ASK','4ASK','8ASK','2FSK','4FSK','8FSK','2PSK','4PSK','8PSK',...
-   '16QAM','64QAM','128QAM','256QAM','MSK','GMSK');
-set(h,'fontsize',10.5,'Orientation','horizontal','NumColumns',8)
+   '16QAM');
+set(h,'fontsize',10.5,'Orientation','horizontal','NumColumns',8,'FontName','Times New Roman');
 
 
 % legend([y1,y2,y3,y4,y5,y6,y7,y8],'2ASK','4ASK','8ASK','2FSK','4FSK','8FSK','2PSK','4PSK','Orientation','horizontal');

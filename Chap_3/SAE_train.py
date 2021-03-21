@@ -104,17 +104,17 @@ def get_cm(y,y_pred):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
-    parser.add_argument('--epochs', default=100, type=int)
+    parser.add_argument('--epochs', default=500, type=int)
     parser.add_argument('--batch_size', default=32, type=int)
     parser.add_argument('--lr', default=0.001, type=float,
                         help="初始学习率")
-    parser.add_argument('--lr_decay', default=0.9, type=float,
+    parser.add_argument('--lr_decay', default=0.95, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/fe_0_20.h5',
+    parser.add_argument('-sf', '--save_file', default='./dataset/fe_0_20.h5',
                         help="权重文件名称")
-    parser.add_argument('-t', '--test', default=1,type=int,
+    parser.add_argument('-t', '--test', default=0,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
-    parser.add_argument('-l', '--load', default=1,type=int,
+    parser.add_argument('-l', '--load', default=0,type=int,
                         help="是否载入模型，设为1激活")
     parser.add_argument('-d', '--dataset', default='./dataset/fe_0_20.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")

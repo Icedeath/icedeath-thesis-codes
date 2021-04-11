@@ -12,8 +12,8 @@ from keras import callbacks
 from keras.layers.normalization import BatchNormalization as BN
 import argparse
 import scipy.io as sio
+import h5py
 from keras.layers.advanced_activations import ELU
-import tensorflow.keras.utils as np_utils
 
 import os
 #os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
@@ -23,33 +23,60 @@ os.environ["CUDA_VISIBLE_DEVICES"]="0"
 K.set_image_data_format('channels_last')
 
 
-def Build_SAE(input_shape, n_class):
-    x_in = layers.Input(shape=input_shape)
-    x = layers.Dense(500)(x_in)
-    x = ELU(alpha=0.5)(x)
-    x = BN()(x)
+def Build_CNN(input_shape, n_class):
+    x = layers.Input(shape=input_shape)
+    conv1 = layers.Conv2D(filters=64, kernel_size=(1,12), strides=(1,1), padding='same',dilation_rate = 5)(x)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.Conv2D(filters=64, kernel_size=(1,12), strides=(1,2), padding='same',dilation_rate = 1)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
     
-    x = layers.Dense(1000)(x)
-    x = ELU(alpha=0.5)(x)
-    x = BN()(x)
+    conv1 = layers.Conv2D(filters=96, kernel_size=(1,9), strides=1, padding='same',dilation_rate = 4)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.Conv2D(filters=96, kernel_size=(1,9), strides=1, padding='same',dilation_rate = 4)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
     
-    x = layers.Dense(1000)(x)
-    x = ELU(alpha=0.5)(x)
-    x = BN()(x)
+    conv1 = layers.Conv2D(filters=128, kernel_size=(1,6), strides=1, padding='same',dilation_rate = 3)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.Conv2D(filters=128, kernel_size=(1,6), strides=1, padding='same',dilation_rate = 3)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
+
+    conv1 = layers.Conv2D(filters=192, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.Conv2D(filters=192, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.Conv2D(filters=192, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
+
+    conv1 = layers.Conv2D(filters=256, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.Conv2D(filters=256, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
+    conv1 = layers.Conv2D(filters=256, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
+    conv1 = ELU(alpha=0.5)(conv1)
+    conv1 = BN()(conv1)
     
-    x = layers.Dense(100)(x)
-    x = ELU(alpha=0.5)(x)
-    x = BN()(x)
+    conv1 = layers.GlobalAveragePooling2D(data_format='channels_last')(conv1)
+    #conv1 = layers.Dense(50, activation = 'tanh')(conv1)
     
-    x1 = layers.Dense(5)(x)
-    x2 = ELU(alpha=0.5)(x1)
-    x2 = BN()(x2)
+    output = layers.Dense(n_class, activation = 'softmax')(conv1)
     
-    output = layers.Dense(n_class, activation = 'softmax')(x2)
-    
-    model = models.Model(x_in, output)
-    model_fe = models.Model(x_in,x1)
-    return model,model_fe
+    model = models.Model(x, output)
+    return model
 
 
 
@@ -108,15 +135,15 @@ if __name__ == "__main__":
     parser.add_argument('--batch_size', default=32, type=int)
     parser.add_argument('--lr', default=0.001, type=float,
                         help="初始学习率")
-    parser.add_argument('--lr_decay', default=0.95, type=float,
+    parser.add_argument('--lr_decay', default=0.9, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./dataset/fe_0_20.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_comp.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=0,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=0,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./dataset/fe_0_20.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/cnn_comp.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=8,
                         help="类别数")
@@ -124,30 +151,30 @@ if __name__ == "__main__":
     print(args)
     
     K.set_image_data_format('channels_last')
-
+    ''' 
     data = sio.loadmat(args.dataset, appendmat=False)  #matlab 非-v7.3
     for i in data:
         locals()[i] = data[i]
     del data
     del i
-
+    '''
     '''
     with np.load(args.dataset) as data: #npz格式
         x_train = data['x_train']
     with np.load(args.dataset) as data:
         y_train = data['y_train']
     '''
-    '''
     with h5py.File(args.dataset, 'r') as data:
         for i in data:
-            locals()[i] = data[i].value  
-    '''
-    x_train = train_x
-    x_test = test_x
-    y_test = np_utils.to_categorical(test_y, args.num_classes)
-    y_train = np_utils.to_categorical(train_y, args.num_classes)
+            locals()[i] = data[i].value
+            
+    #x_train = x_train[0:785000, :]
+    #y_train = y_train[0:785000, :]
     
-    model,model_fe = Build_SAE(input_shape=x_train.shape[1:], n_class=args.num_classes)
+    x_train = x_train.reshape(x_train.shape[0], 1, x_train.shape[1], 1)
+    print('x_train.shape',x_train.shape)
+
+    model = Build_CNN(input_shape=x_train.shape[1:], n_class=args.num_classes)
 
     
     
@@ -158,49 +185,21 @@ if __name__ == "__main__":
         args.epochs=0
         history = train(model=model, data=((x_train, y_train)), args=args)
         print('Loading %s' %args.save_file)
-
-    ###########################测试用############################  
+      
     print('-'*30 + 'Begin: test' + '-'*30)
-
-    test_acc = []
-    acc = []
-    for snr in range(0,21,2):
-        fileName = './dataset/data_fe_'+str(snr)+'.mat'
-
-        x_test=sio.loadmat(fileName,appendmat=False)['test_x']
-        y_test=np.squeeze(sio.loadmat(fileName,appendmat=False)['test_y'])
-
-
-        y_pred=model.predict(x_test,verbose=0)
-        y_label_pred = np.argmax(y_pred, axis=1)
-        #y_label = 
-        test_accuracy = np.mean(np.equal(y_test,y_label_pred))
-        test_acc.append(test_accuracy)
-        idx_cm = get_cm(y_test,y_label_pred)
-        accuracy = get_accuracy(idx_cm)
-        acc.append(accuracy)
-        print("test accuarcy:",test_accuracy)
-        print('-' * 30 + 'End: test' + '-' * 30)   
     
-    acc_aver = np.mean(test_acc)
+    y_pred1 = model.predict(x_train, batch_size=args.batch_size,verbose=1)
+    y=np.argmax(y_train,axis = 1)
+    y_pred = np.argmax(y_pred1,axis = 1)
+    
+    acc_aver = np.mean(np.equal(y,y_pred))    
+    idx_cm = get_cm(y,y_pred)
 
-    print('test_acc', test_accuracy)
-    print('Average test_acc', acc_aver)
+    acc = get_accuracy(idx_cm) 
+
+    print('test_acc', acc)
+    print('acc_aver', acc_aver)
     print('-' * 30 + 'End  : test' + '-' * 30)   
-
-    sio.savemat('acc.mat', {'acc':acc,'test_acc':test_acc})
-
-    '''
-    for snr in range(0,21,2):
-        fileName = './dataset/data_fe_'+str(snr)+'.mat'
-        file_save = 'fe_'+ str(snr)+'.mat'
-
-        x_test=sio.loadmat(fileName,appendmat=False)['test_x']
-        y_test=np.squeeze(sio.loadmat(fileName,appendmat=False)['test_y'])
-        
-        fe = model_fe.predict(x_test,verbose = 1)
-        sio.savemat(file_save, {'fe':fe,'y':y_test})
-    '''
     
 '''
     from keras.utils import plot_model

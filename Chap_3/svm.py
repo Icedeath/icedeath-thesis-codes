@@ -77,5 +77,5 @@ for i in snr:
      ace.append(accuracy)
      ace_m.append(accuracy_m)
      
-     savedata='acc_5_'+snr1+'.mat'
+     savedata='acc_5_'+snr1+'_3.mat'
 sio.savemat(savedata, {'ace':ace,'ace_m':ace_m})

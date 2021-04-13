@@ -14,7 +14,7 @@ from sklearn.model_selection import GridSearchCV
 import warnings
 warnings.filterwarnings('ignore')
 
-nb_classes=10
+nb_classes=15
 
 def get_cm(y,y_pred,nb_classes):
     cm = np.zeros([nb_classes, nb_classes])
@@ -26,15 +26,15 @@ def get_cm(y,y_pred,nb_classes):
 
 def get_accuracy(cm):
     return [float(cm[i,i]/np.sum(cm[i,:])) for i in range(nb_classes)]
-snr1=10
+snr1=20
 
 snr1='%d' %snr1
 
 train_set='./dataset/data_fe_'+snr1+'.mat'
-
+#train_set = './dataset/fe_0_20.mat'
 
 print('Loading data...')
-train_x=sio.loadmat(train_set,appendmat=False)['train_x'][:,[7,8,10,20,23]]
+train_x=sio.loadmat(train_set,appendmat=False)['train_x']
 train_y=np.squeeze(sio.loadmat(train_set,appendmat=False)['train_y'])
 #test_x=sio.loadmat(train_set,appendmat=False)['train_x'][:,[7,8,9,13,20]]
 #test_y=np.squeeze(sio.loadmat(train_set,appendmat=False)['train_y'])
@@ -59,13 +59,14 @@ accuracy_m=np.mean(accuracy)
 print(accuracy)
 '''
 snr = np.arange(0,21,2)
+
 ace=[]
 ace_m=[]
 for i in snr:
      print(i)
      a='%d' %i
      test_set='./dataset/data_fe_'+a+'.mat'
-     test_x=sio.loadmat(test_set,appendmat=False)['test_x'][:,[7,8,10,20,23]]
+     test_x=sio.loadmat(test_set,appendmat=False)['test_x']
      test_y=np.squeeze(sio.loadmat(test_set,appendmat=False)['test_y'])
          
      

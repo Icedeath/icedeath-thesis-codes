@@ -2,7 +2,7 @@ clear all
 clc
 load ../dataset/fe_15
 
-n_tr=100;
+n_tr=200;
 n_te=1000;
 
 tr1 = zeros(N_samples,25);

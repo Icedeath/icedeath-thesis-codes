@@ -31,7 +31,7 @@ snr1=20
 snr1='%d' %snr1
 
 train_set='./dataset/data_fe_'+snr1+'.mat'
-#train_set = './dataset/fe_0_20.mat'
+train_set = './dataset/fe_0_20.mat'
 
 print('Loading data...')
 train_x=sio.loadmat(train_set,appendmat=False)['train_x']

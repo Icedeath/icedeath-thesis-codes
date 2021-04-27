@@ -58,7 +58,7 @@ accuracy = get_accuracy(cm)
 accuracy_m=np.mean(accuracy)
 print(accuracy)
 '''
-snr = np.arange(0,21,2)
+snr = np.arange(-10,21,2)
 ace=[]
 ace_m=[]
 for i in snr:

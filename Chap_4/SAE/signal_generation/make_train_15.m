@@ -2,7 +2,7 @@ clear all
 clc
 load ../dataset/fe_15
 
-n_tr=200;
+n_tr=100;
 n_te=1000;
 
 tr1 = zeros(N_samples,25);
@@ -45,7 +45,7 @@ test_y=[try1(N_samples-n_te+1:N_samples,:);try2(N_samples-n_te+1:N_samples,:);tr
     ;try9(N_samples-n_te+1:N_samples,:);try10(N_samples-n_te+1:N_samples,:);try11(N_samples-n_te+1:N_samples,:)...
     ;try12(N_samples-n_te+1:N_samples,:);try13(N_samples-n_te+1:N_samples,:);try14(N_samples-n_te+1:N_samples,:)...
     ;try15(N_samples-n_te+1:N_samples,:)];
-for snr = snr_min:snr_max
+for snr = snr_min:2:snr_max
     trx1 = mode1((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
     trx2 = mode2((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
     trx3 = mode3((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
@@ -73,6 +73,7 @@ for snr = snr_min:snr_max
     a=strcat('Saving data_fe_',num2str(snr),'.mat...');
     disp(a)
     for i = 1:25
+        %m = mean(train_x(:,i));
         train_x(:,i)=train_x(:,i)/mean(train_x(:,i))-1;
         test_x(:,i)=test_x(:,i)/mean(test_x(:,i))-1;
     end

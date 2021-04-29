@@ -1,8 +1,8 @@
 clear all
 clc
-load ../dataset/fe_15
+load ../dataset/fe_15_500
 
-n_tr=5;
+n_tr=15;
 n_te=1000;
 
 tr1 = zeros(N_samples,25);

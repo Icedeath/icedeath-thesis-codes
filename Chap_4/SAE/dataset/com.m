@@ -2,7 +2,7 @@
 clc
 clear all
 
-begin_snr = 0;
+begin_snr = -10;
 end_snr =20;
 
 train_x1 = [];

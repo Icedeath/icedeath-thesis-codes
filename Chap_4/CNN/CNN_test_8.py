@@ -159,7 +159,7 @@ if __name__ == "__main__":
     '''
       
     print('-'*30 + 'Begin: test' + '-'*30)
-    snr = np.linspace(0,20,11, dtype = int)
+    snr = np.linspace(-4,20,13, dtype = int)
     
     acc = []
     acc_aver = []

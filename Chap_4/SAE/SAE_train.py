@@ -41,7 +41,7 @@ def Build_SAE(input_shape, n_class):
     x = ELU(alpha=0.5)(x)
     x = BN()(x)
     
-    x1 = layers.Dense(4)(x)
+    x1 = layers.Dense(3)(x)
     x2 = ELU(alpha=0.5)(x1)
     x2 = BN()(x2)
     
@@ -116,9 +116,9 @@ if __name__ == "__main__":
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=0,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./dataset/fe_15_500.mat',
+    parser.add_argument('-d', '--dataset', default='./dataset/fe_-6_20.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
-    parser.add_argument('-n', '--num_classes', default=15,
+    parser.add_argument('-n', '--num_classes', default=10,
                         help="类别数")
     args = parser.parse_args()
     print(args)
@@ -164,7 +164,7 @@ if __name__ == "__main__":
 
     test_acc = []
     acc = []
-    for snr in range(0,21,2):
+    for snr in range(-10,21,2):
         fileName = './dataset/data_fe_'+str(snr)+'.mat'
 
         x_test=sio.loadmat(fileName,appendmat=False)['test_x']

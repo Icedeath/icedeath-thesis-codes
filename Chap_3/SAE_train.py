@@ -116,7 +116,7 @@ if __name__ == "__main__":
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=0,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./dataset/fe_0_20.mat',
+    parser.add_argument('-d', '--dataset', default='./dataset/fe_-4_20.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=8,
                         help="类别数")
@@ -164,7 +164,7 @@ if __name__ == "__main__":
 
     test_acc = []
     acc = []
-    for snr in range(0,21,2):
+    for snr in range(-4,21,2):
         fileName = './dataset/data_fe_'+str(snr)+'.mat'
 
         x_test=sio.loadmat(fileName,appendmat=False)['test_x']

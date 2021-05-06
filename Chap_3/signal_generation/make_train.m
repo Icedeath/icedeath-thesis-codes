@@ -2,7 +2,7 @@ clear all
 clc
 load ../dataset/fe_15_500
 
-n_tr=15;
+n_tr=3;
 n_te=1000;
 
 tr1 = zeros(N_samples,25);
@@ -27,6 +27,10 @@ train_y=[try1(1:n_tr,:);try2(1:n_tr,:);try3(1:n_tr,:);try4(1:n_tr,:);try5(1:n_tr
 test_y=[try1(N_samples-n_te+1:N_samples,:);try2(N_samples-n_te+1:N_samples,:);try3(N_samples-n_te+1:N_samples,:);try4(N_samples-n_te+1:N_samples,:);try5(N_samples-n_te+1:N_samples,:)...
     ;try6(N_samples-n_te+1:N_samples,:);try7(N_samples-n_te+1:N_samples,:);try8(N_samples-n_te+1:N_samples,:)];
 for snr = snr_min:2:snr_max
+    index = zeros(8,N_samples);
+    for ind = 1:8
+        index(ind,:) = randperm(N_samples);
+    end
     trx1 = mode1((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
     trx2 = mode4((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
     trx3 = mode5((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
@@ -35,12 +39,25 @@ for snr = snr_min:2:snr_max
     trx6 = mode8((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
     trx7 = mode9((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
     trx8 = mode10((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
+    
+    trx1 = trx1(index(1,:),:);
+    trx2 = trx2(index(2,:),:);
+    trx3 = trx3(index(3,:),:);
+    trx4 = trx4(index(4,:),:);
+    trx5 = trx5(index(5,:),:);
+    trx6 = trx6(index(6,:),:);
+    trx7 = trx7(index(7,:),:);
+    trx8 = trx8(index(8,:),:);
+    
+    
     train_x=[trx1(1:n_tr,:);trx2(1:n_tr,:);trx3(1:n_tr,:);trx4(1:n_tr,:);trx5(1:n_tr,:)...
     ;trx6(1:n_tr,:);trx7(1:n_tr,:);trx8(1:n_tr,:)];
     test_x=[trx1(N_samples-n_te+1:N_samples,:);trx2(N_samples-n_te+1:N_samples,:);trx3(N_samples-n_te+1:N_samples,:);trx4(N_samples-n_te+1:N_samples,:);trx5(N_samples-n_te+1:N_samples,:)...
     ;trx6(N_samples-n_te+1:N_samples,:);trx7(N_samples-n_te+1:N_samples,:);trx8(N_samples-n_te+1:N_samples,:)];
     a=strcat('Saving data_fe_',num2str(snr),'.mat...');
     disp(a)
+    
+    
     
     for i = 1:25
         m = mean(train_x(:,i));

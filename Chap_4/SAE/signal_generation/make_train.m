@@ -33,7 +33,7 @@ train_y=[try1(1:n_tr,:);try2(1:n_tr,:);try3(1:n_tr,:);try4(1:n_tr,:);try5(1:n_tr
 test_y=[try1(N_samples-n_te+1:N_samples,:);try2(N_samples-n_te+1:N_samples,:);try3(N_samples-n_te+1:N_samples,:);try4(N_samples-n_te+1:N_samples,:);try5(N_samples-n_te+1:N_samples,:)...
     ;try6(N_samples-n_te+1:N_samples,:);try7(N_samples-n_te+1:N_samples,:);try8(N_samples-n_te+1:N_samples,:),...
     ;try9(N_samples-n_te+1:N_samples,:);try10(N_samples-n_te+1:N_samples,:)];
-for snr = snr_min:snr_max
+for snr = snr_min:2:snr_max
     trx1 = mode1((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
     trx2 = mode2((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
     trx3 = mode3((snr-snr_min)*N_samples+1:(snr-snr_min)*N_samples+N_samples,:);
@@ -53,6 +53,7 @@ for snr = snr_min:snr_max
     a=strcat('Saving data_fe_',num2str(snr),'.mat...');
     disp(a)
     for i = 1:25
+        
         train_x(:,i)=train_x(:,i)/mean(train_x(:,i))-1;
         test_x(:,i)=test_x(:,i)/mean(test_x(:,i))-1;
     end

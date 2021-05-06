@@ -2,7 +2,7 @@
 clc
 clear all
 
-begin_snr = -10;
+begin_snr = -4;
 end_snr =20;
 
 train_x1 = [];
@@ -11,7 +11,7 @@ test_x1 = [];
 test_y1 = [];
 
 
-for snr =begin_snr:2:end_snr
+for snr =begin_snr:4:end_snr
     fdata = strcat('data_fe_', num2str(snr));
 
     load(strcat(fdata,'.mat'))

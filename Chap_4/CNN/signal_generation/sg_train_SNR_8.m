@@ -10,8 +10,8 @@ fs = 200;             %采样频率
 rs = 2;               %符号速率
 N_code = 200;           %符号数量
 N_filter = 200;       %滤波器阶数
-length = 14000;  %Final length of signals
-N_samples_m = 1000;    %Number of overlapped samples
+length = 1400;  %Final length of signals
+N_samples_m = 2000;    %Number of overlapped samples
 num_classes = 8;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -22,7 +22,7 @@ max_shift = fs*N_code/rs - length;
 
 fprintf('Generating training samples...\n');
 
-for snr1 =0:2:20
+for snr1 =-4:2:20
  tic;
 snr_min = snr1;
 snr_max = snr1;

@@ -10,11 +10,11 @@ fs = 200;             %ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½
 rs = 2;               %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?
 N_code = 200;           %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?
 N_filter = 200;       %ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-length = 14000;  %Final length of signals
-N_samples_m = 300;    %Number of overlapped samples
+length = 1400;  %Final length of signals
+N_samples_m = 2000;    %Number of overlapped samples
 num_classes = 8;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-snr_min = 0;
+snr_min = -4;
 snr_max = 20;
 
 min_targets = 1;

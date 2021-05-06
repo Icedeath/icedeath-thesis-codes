@@ -10,7 +10,7 @@ fs = 200;             %ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½
 rs = 2;               %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?
 N_code = 200;           %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?
 N_filter = 200;       %ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-length = 1400;  %Final length of signals
+length = 8000;  %Final length of signals
 N_samples_m = 2000;    %Number of overlapped samples
 num_classes = 8;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

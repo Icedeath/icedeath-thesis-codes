@@ -164,7 +164,7 @@ if __name__ == "__main__":
 
     test_acc = []
     acc = []
-    for snr in range(-10,21,2):
+    for snr in range(-8,21,2):
         fileName = './dataset/data_fe_'+str(snr)+'.mat'
 
         x_test=sio.loadmat(fileName,appendmat=False)['test_x']
@@ -191,7 +191,7 @@ if __name__ == "__main__":
     sio.savemat('acc.mat', {'acc':acc,'test_acc':test_acc})
 
     '''
-    for snr in range(0,21,2):
+    for snr in range(-8,21,2):
         fileName = './dataset/data_fe_'+str(snr)+'.mat'
         file_save = 'fe_'+ str(snr)+'.mat'
 
@@ -200,9 +200,5 @@ if __name__ == "__main__":
         
         fe = model_fe.predict(x_test,verbose = 1)
         sio.savemat(file_save, {'fe':fe,'y':y_test})
-    '''
-    
-'''
-    from keras.utils import plot_model
-    plot_model(model, to_file='model.png',show_shapes = True)
-'''
+    '''    
+

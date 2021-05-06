@@ -11,7 +11,7 @@ rs = 2;               %符号速率
 N_code = 100;           %符号数量
 N_filter = 200;       %滤波器阶数
 length = 8000;  %Final length of signals
-N_samples_m = 800000;    %Number of overlapped samples
+N_samples_m = 800;    %Number of overlapped samples
 num_classes = 8;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Ac_max = 1.1;

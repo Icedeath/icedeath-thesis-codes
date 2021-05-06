@@ -160,9 +160,9 @@ if __name__ == "__main__":
                         help="是否载入模型，设为1激活")
     parser.add_argument('-p', '--plot', default=0,type=int,
                         help="训练结束后画出loss变化曲线，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/tr_2_comp.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/8000_3_11090.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
-    parser.add_argument('-n', '--num_classes', default=3,
+    parser.add_argument('-n', '--num_classes', default=8,
                         help="类别数")
     parser.add_argument('-dc', '--dim_capsule', default=16)
     #parser.add_argument('-tm', '--target_max', default=3, type=int)

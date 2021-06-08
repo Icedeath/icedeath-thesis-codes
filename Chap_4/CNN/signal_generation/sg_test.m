@@ -1,19 +1,21 @@
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CNNÐÅºÅÉú³É£¨¹Ì¶¨SNRÑ­»·£©%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%CNNï¿½Åºï¿½ï¿½ï¿½É£ï¿½Ñµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 close all;
 clear all;
 clc;
 
 warning off
-%% ²ÎÊýÉèÖÃÇø
-fc = 70;              %ÔØ²¨ÆµÂÊ
-fs = 200;             %²ÉÑùÆµÂÊ 
-rs = 2;               %·ûºÅËÙÂÊ
-N_code = 100;           %·ûºÅÊýÁ¿
-N_filter = 200;       %ÂË²¨Æ÷½×Êý
-length = 8000;  %Final length of signals
-N_samples_m = 20000;    %Number of overlapped samples
+%% ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+fc = 70;              %ï¿½Ø²ï¿½Æµï¿½ï¿½
+fs = 200;             %ï¿½ï¿½ï¿½ï¿½Æµï¿½ï¿½ 
+rs = 2;               %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+N_code = 200;           %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+N_filter = 200;       %ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+length = 12000;  %Final length of signals
+N_samples_m = 5000;    %Number of overlapped samples
 num_classes = 15;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+snr_min = 20;
+snr_max = 20;
 
 min_targets = 1;
 max_targets = 1;
@@ -22,20 +24,16 @@ max_shift = fs*N_code/rs - length;
 
 fprintf('Generating training samples...\n');
 
-for snr1 = 0:2:20
- tic;
-snr_min = snr1;
-snr_max = snr1;
 
 x_train = zeros(length,N_samples_m);
 y_train = zeros(num_classes,N_samples_m);
 
-
+tic;
 
 idx_tar = randi([min_targets, max_targets], 1, N_samples_m);
 for i=1:N_samples_m
-    if mod(i, 2000) == 0
-        fprintf('Current SNR = %d dB',snr1);
+    if mod(i, 500) == 0
+        fprintf('Current SNR = %d dB',snr);
         fprintf('   itr=%d\n',i);
     end
     class_i = randperm(num_classes);
@@ -149,6 +147,5 @@ end
 snr = [snr_min, snr_max];
 
 fprintf('Saving...\n');
-save(strcat('../samples/te_',num2str(snr1)),'x_train','y_train','snr','length','-v7.3')
+save('../samples/test_20','x_train','y_train','snr','length','-v7.3')
 toc;
-end

@@ -12,10 +12,10 @@ N_code = 200;           %ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿?
 N_filter = 200;       %ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 length = 14000;  %Final length of signals
 N_samples_m = 3000;    %Number of overlapped samples
-num_classes = 15;
+num_classes = 10;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 snr_min = 0;
-snr_max = 0;
+snr_max = 20;
 
 min_targets = 1;
 max_targets = 1;
@@ -148,5 +148,5 @@ end
 snr = [snr_min, snr_max];
 
 fprintf('Saving...\n');
-save('../samples/tsne_0','x_train','y_train','snr','length','-v7.3')
+save('../samples/data_10','x_train','y_train','snr','length','-v7.3')
 toc;

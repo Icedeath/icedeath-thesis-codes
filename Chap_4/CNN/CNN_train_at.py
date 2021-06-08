@@ -16,8 +16,8 @@ from keras.layers.advanced_activations import ELU
 
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
-#os.environ["CUDA_VISIBLE_DEVICES"]="1"
+#os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
+os.environ["CUDA_VISIBLE_DEVICES"]="0"
 K.set_image_data_format('channels_last')
 
 class SeBlock(layers.Layer):   
@@ -44,6 +44,7 @@ def Build_CNN(input_shape, n_class):
     conv1 = BN()(conv1)
     conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
     conv1 = SeBlock()(conv1)
+    
     conv1 = layers.Conv2D(filters=96, kernel_size=(1,9), strides=1, padding='same',dilation_rate = 4)(conv1)
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
@@ -52,6 +53,8 @@ def Build_CNN(input_shape, n_class):
     conv1 = BN()(conv1)
     conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
     conv1 = SeBlock()(conv1)
+    conv1 = layers.Dropout(0.2)(conv1)
+    
     conv1 = layers.Conv2D(filters=128, kernel_size=(1,6), strides=1, padding='same',dilation_rate = 3)(conv1)
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
@@ -60,6 +63,7 @@ def Build_CNN(input_shape, n_class):
     conv1 = BN()(conv1)
     conv1 = layers.MaxPooling2D((1, 2), strides=(1, 2))(conv1)
 
+    conv1 = layers.Dropout(0.2)(conv1)
     conv1 = layers.Conv2D(filters=192, kernel_size=(1,3), strides=1, padding='same',dilation_rate = 2)(conv1)
     conv1 = ELU(alpha=0.5)(conv1)
     conv1 = BN()(conv1)
@@ -97,7 +101,7 @@ def train(model, data, args):
                                            filepath=args.save_file.rstrip('.h5') + '_' + 'epoch.{epoch:02d}.h5', 
                                   save_weights_only=True, mode='auto', period=1)
     lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
-    model = multi_gpu_model(model, gpus=2) 
+    #model = multi_gpu_model(model, gpus=2) 
     if args.load == 1:
         model.load_weights(args.save_file)
         print('Loading %s' %args.save_file)  
@@ -107,7 +111,7 @@ def train(model, data, args):
                   metrics=["accuracy"])
 
     hist = model.fit(x_train, y_train, batch_size=args.batch_size, epochs=args.epochs,
-                     validation_split = 0.1, callbacks=[checkpoint, lr_decay])
+                     validation_split = 0.01, callbacks=[checkpoint, lr_decay])
     return hist.history
 
 def get_accuracy(cm):
@@ -117,7 +121,7 @@ def get_accuracy(cm):
 def save_single():
     model = Build_CNN(input_shape=x_train.shape[1:], n_class=args.num_classes)
 
-    p_model = multi_gpu_model(model, gpus=2)
+    #p_model = multi_gpu_model(model, gpus=2)
     p_model.compile(optimizer=optimizers.Adam(lr=args.lr),
                   loss= 'categorical_crossentropy',
                   metrics={})    
@@ -145,7 +149,7 @@ if __name__ == "__main__":
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.9, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0_epoch.03.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_epoch.10.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
@@ -195,7 +199,7 @@ if __name__ == "__main__":
         print('Loading %s' %args.save_file)
       
     print('-'*30 + 'Begin: test' + '-'*30)
-    
+    print('test_x.shape', x_train.shape)
     y_pred1 = model.predict(x_train, batch_size=args.batch_size,verbose=1)
     y=np.argmax(y_train,axis = 1)
     y_pred = np.argmax(y_pred1,axis = 1)
@@ -205,7 +209,8 @@ if __name__ == "__main__":
 
     acc = get_accuracy(idx_cm) 
 
-
+    print('acc_aver', acc_aver)
+    print('acc', acc)
     print('-' * 30 + 'End  : test' + '-' * 30)   
     
 '''

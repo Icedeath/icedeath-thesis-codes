@@ -1,7 +1,7 @@
 #coding=utf
 
 import keras
-#from keras.utils import multi_gpu_model
+from keras.utils import multi_gpu_model
 import numpy as np
 from keras import layers, models, optimizers
 from keras import backend as K
@@ -18,7 +18,7 @@ from keras.layers.advanced_activations import ELU
 import os
 #os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+#os.environ["CUDA_VISIBLE_DEVICES"]="0"
 #os.environ["CUDA_VISIBLE_DEVICES"]="1"
 K.set_image_data_format('channels_last')
 
@@ -87,7 +87,7 @@ def train(model, data, args):
                                            filepath=args.save_file.rstrip('.h5') + '_' + 'epoch.{epoch:02d}.h5', 
                                   save_weights_only=True, mode='auto', period=1)
     lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
-    #model = multi_gpu_model(model, gpus=2) 
+    model = multi_gpu_model(model, gpus=2) 
     
     if args.load == 1:
         model.load_weights(args.save_file)
@@ -108,7 +108,7 @@ def get_accuracy(cm):
 def save_single():
     model = Build_CNN(input_shape=x_train.shape[1:], n_class=args.num_classes)
 
-    #p_model = multi_gpu_model(model, gpus=2)  
+    p_model = multi_gpu_model(model, gpus=2)  
     p_model = model
     p_model.compile(optimizer=optimizers.Adam(lr=args.lr),
                   loss= 'categorical_crossentropy',
@@ -133,17 +133,17 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
     parser.add_argument('--epochs', default=50, type=int)
     parser.add_argument('--batch_size', default=32, type=int)
-    parser.add_argument('--lr', default=0.001, type=float,
+    parser.add_argument('--lr', default=0.0012, type=float,
                         help="初始学习率")
-    parser.add_argument('--lr_decay', default=0.9, type=float,
+    parser.add_argument('--lr_decay', default=0.92, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0_20.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_mul.h5',
                         help="权重文件名称")
-    parser.add_argument('-t', '--test', default=1,type=int,
+    parser.add_argument('-t', '--test', default=0,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
     parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/te_0_20.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/data_mul.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")

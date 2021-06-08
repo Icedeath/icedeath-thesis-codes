@@ -15,8 +15,8 @@ m=0
 n=300
 
 
-X=sio.loadmat('out_20.mat',appendmat=False)['vis_out']
-y=np.squeeze(sio.loadmat('out_20.mat',appendmat=False)['y']+1)
+X=sio.loadmat('tsne_20.mat',appendmat=False)['out']
+y=np.squeeze(sio.loadmat('tsne_20.mat',appendmat=False)['y']+1)
 #y=np.linspace(1,X.shape[0],X.shape[0])
 #y=np.zeros([X.shape[0],],dtype='int64')
 #for i in xrange (n-m):

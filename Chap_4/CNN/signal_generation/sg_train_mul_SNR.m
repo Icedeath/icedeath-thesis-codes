@@ -11,7 +11,7 @@ rs = 2;               %��������
 N_code = 200;           %��������
 N_filter = 200;       %�˲�������
 length = 12000;  %Final length of signals
-N_samples_m = 300000;    %Number of overlapped samples
+N_samples_m = 3000;    %Number of overlapped samples
 num_classes = 15;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Rsym = rs;                % Input symbol rate
@@ -19,7 +19,7 @@ Rbit = Rsym;
 % Rbit = Rsym * log2(M);      % Input bit rate
 Nos = fs/rs;                    % Oversampling factor
 ts = (1/Rbit) / Nos/3;        % Input sample period
-chan = stdchan(ts, 0, 'cost207HTx12');
+chan = stdchan(ts, 0, 'cost207HTx12');%costRAx6,TUx6,BUx12,HTx12
 min_targets = 1;
 max_targets = 1;
 
@@ -27,14 +27,11 @@ max_shift = fs*N_code/rs - length;
 
 fprintf('Generating training samples...\n');
 
-%for snr1 =0:2:20
+for snr1 =0:2:20
  tic;
-%snr_min = snr1;
-%snr_max = snr1;
+snr_min = snr1;
+snr_max = snr1;
 
-snr_min = 0;
-snr_max = 20;
-snr1 = 20;
 
 x_train = zeros(length,N_samples_m);
 y_train = zeros(num_classes,N_samples_m);
@@ -173,6 +170,6 @@ end
 snr = [snr_min, snr_max];
 
 fprintf('Saving...\n');
-save('../samples/data_mul','x_train','y_train','snr','length','-v7.3')
+save(strcat('../samples/data_mul',num2str(snr1)),'x_train','y_train','snr','length','-v7.3')
 toc;
-%end
+end

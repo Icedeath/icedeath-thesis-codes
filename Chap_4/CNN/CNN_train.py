@@ -98,7 +98,7 @@ def train(model, data, args):
                   metrics=["accuracy"])
 
     hist = model.fit(x_train, y_train, batch_size=args.batch_size, epochs=args.epochs,
-                     validation_split = 0.1, callbacks=[checkpoint, lr_decay])
+                     validation_split = 0.01, callbacks=[checkpoint, lr_decay])
     return hist.history
 
 def get_accuracy(cm):
@@ -131,17 +131,17 @@ def get_cm(y,y_pred):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Capsule Network on MNIST.")
-    parser.add_argument('--epochs', default=50, type=int)
+    parser.add_argument('--epochs', default=20, type=int)
     parser.add_argument('--batch_size', default=32, type=int)
-    parser.add_argument('--lr', default=0.0012, type=float,
+    parser.add_argument('--lr', default=0.001, type=float,
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.92, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_mul.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_mul_RAx6.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=0,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
-    parser.add_argument('-l', '--load', default=1,type=int,
+    parser.add_argument('-l', '--load', default=0,type=int,
                         help="是否载入模型，设为1激活")
     parser.add_argument('-d', '--dataset', default='./samples/data_mul.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")

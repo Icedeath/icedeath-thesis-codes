@@ -13,11 +13,11 @@ import argparse
 import scipy.io as sio
 import h5py
 from keras.layers.advanced_activations import ELU
-'''
+
 import os
 os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"
 os.environ["CUDA_VISIBLE_DEVICES"]="0,1"
-'''
+
 K.set_image_data_format('channels_last')
 
 
@@ -84,7 +84,7 @@ def train(model, data, args):
                                            filepath=args.save_file.rstrip('.h5') + '_' + 'epoch.{epoch:02d}.h5', 
                                   save_weights_only=True, mode='auto', period=1)
     lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
-    #model = multi_gpu_model(model, gpus=2)
+    model = multi_gpu_model(model, gpus=2)
     model.compile(optimizer=optimizers.Adam(lr=args.lr),
                   loss= 'categorical_crossentropy',
                   metrics=["accuracy"])
@@ -130,7 +130,7 @@ if __name__ == "__main__":
                         help="初始学习率")
     parser.add_argument('--lr_decay', default=0.99, type=float,
                         help="学习率衰减")
-    parser.add_argument('-sf', '--save_file', default='./weights/cnn_0_epoch.11_epoch.07.h5',
+    parser.add_argument('-sf', '--save_file', default='./weights/cnn_mul.h5',
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=1,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
@@ -165,7 +165,7 @@ if __name__ == "__main__":
     acc_aver = []
     idx_cm = []
     for s in snr:
-        args.dataset = './samples/te_' + str(s)+'.mat'
+        args.dataset = './samples/data_mul' + str(s)+'.mat'
         print('Current SNR = %d dB, loading %s...' %(s, args.dataset))
         with h5py.File(args.dataset, 'r') as data:
             for i in data:
@@ -192,7 +192,7 @@ if __name__ == "__main__":
         acc.append(acc1)
         acc_aver.append(acc_aver1)
         idx_cm.append(idx_cm1)
-    file_save = 'acc_0_20.mat'
+    file_save = 'acc_0_20_RAx6.mat'
     print('Saving %s ....'%(file_save))
     sio.savemat(file_save, {'acc':acc, 'acc_aver':acc_aver,'idx_cm':idx_cm})
 

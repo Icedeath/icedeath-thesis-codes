@@ -10,8 +10,8 @@ fs = 200;             %����Ƶ��
 rs = 2;               %��������
 N_code = 200;           %��������
 N_filter = 200;       %�˲�������
-length = 12000;  %Final length of signals
-N_samples_m = 20000;    %Number of overlapped samples
+length = 14000;  %Final length of signals
+N_samples_m = 200000;    %Number of overlapped samples
 num_classes = 15;
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Rsym = rs;                % Input symbol rate
@@ -32,8 +32,8 @@ fprintf('Generating training samples...\n');
 %snr_min = snr1;
 %snr_max = snr1;
 
-snr_min = 5;
-snr_max = 15;
+snr_min = 0;
+snr_max = 20;
 snr1 = 20;
 
 x_train = zeros(length,N_samples_m);

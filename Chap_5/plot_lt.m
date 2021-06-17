@@ -3,7 +3,7 @@ load acc_2_2_comp
 
 acc_AMPT = [0.5,0.625,0.728,0.82,0.88,0.92];
 X = [0,3,6,9,12,15];
-
+acc_aver = [];
 n= 0:15;
 
 acc_A=interp1(X,acc_AMPT,n,'Spline');

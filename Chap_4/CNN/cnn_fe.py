@@ -6,7 +6,7 @@ Created on Tue Oct 27 22:53:48 2020
 """
 #coding=utf
 
-from keras.utils import multi_gpu_model
+#from keras.utils import multi_gpu_model
 import numpy as np
 from keras import layers, models, optimizers
 from keras import backend as K
@@ -92,7 +92,7 @@ def train(model, data, args):
                                            filepath=args.save_file.rstrip('.h5') + '_' + 'epoch.{epoch:02d}.h5', 
                                   save_weights_only=True, mode='auto', period=1)
     lr_decay = callbacks.LearningRateScheduler(schedule=lambda epoch: args.lr * (args.lr_decay ** epoch))
-    model = multi_gpu_model(model, gpus=2) 
+    #model = multi_gpu_model(model, gpus=2) 
     '''
     if args.load == 1:
         model.load_weights(args.save_file)
@@ -120,9 +120,9 @@ if __name__ == "__main__":
                         help="权重文件名称")
     parser.add_argument('-t', '--test', default=0,type=int,
                         help="测试模式，设为非0值激活，跳过训练")
-    parser.add_argument('-l', '--load', default=0,type=int,
+    parser.add_argument('-l', '--load', default=1,type=int,
                         help="是否载入模型，设为1激活")
-    parser.add_argument('-d', '--dataset', default='./samples/data_mul.mat',
+    parser.add_argument('-d', '--dataset', default='./samples/data_mul16.mat',
                         help="需要载入的数据文件，MATLAB -v7.3格式")
     parser.add_argument('-n', '--num_classes', default=15,
                         help="类别数")
@@ -157,7 +157,7 @@ if __name__ == "__main__":
     model.load_weights(args.save_file)
     x = model_fe.input
     x1 = model_fe.output
-    x1 = layers.Dense(3)(x1)
+    x1 = layers.Dense(4)(x1)
     x1 = ELU(alpha=0.5)(x1)
     x2 = BN()(x1)
     output = layers.Dense(args.num_classes, activation = 'softmax')(x2)
@@ -169,14 +169,14 @@ if __name__ == "__main__":
     for layer in model_fe.layers:  
         layer.trainable = False
     
-    args.epochs=200
+    args.epochs=0
     history = train(model=model_re, data=((x_train, y_train)), args=args)
     
-    model_re.load_weights('./weights/cnn_mul_4.h5')
+    model_re.load_weights('./weights/cnn_mulsGPU_4.h5')
 
     print('Predicting...')
     fe = fe_out.predict(x_train,batch_size = 64,verbose = 1)
-    sio.savemat('fe_20.mat', {'fe':fe,'y':y_r})
+    sio.savemat('fe_16.mat', {'fe':fe,'y':y_r})
 
 
     
